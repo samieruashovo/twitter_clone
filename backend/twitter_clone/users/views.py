@@ -6,8 +6,8 @@ from .models import User
 from .serializers import UserSerializer, UserEditSerializer
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
-from .permissions import IsUserOrReadOnly
-from mainproject.pagination import CustomPagination
+from .permission import IsUserOrReadOnly
+from twitter_clone.pagination import CustomPagination
 
 from notifications.models import Notification
 
