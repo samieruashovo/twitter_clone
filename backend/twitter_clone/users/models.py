@@ -7,7 +7,7 @@ class CustomUserManager(BaseUserManager):
 
     def create_user(self, email,username, password, **extra_fields):
         """
-          Create and save a User with the given email,first name , lastname and password.
+          Create and save a SuperUser with the given email,first name , lastname and password.
         """
         if not email:
             raise ValueError(_('The Email must be set'))

@@ -19,7 +19,7 @@ import {
 import { setMessage } from "../slices/tweetSlice";
 import axios from "axios";
 import { axiosInstance } from "../../index";
-const url = process.env.REACT_APP_DOMAIN;
+const url = "http://localhost:8000/";
 
 export const load_user = () => async (dispatch) => {
   if (localStorage.getItem("access")) {
@@ -43,7 +43,7 @@ export const load_user = () => async (dispatch) => {
 export const refreshToken = () => async (dispatch) => {
   if (localStorage.getItem("refresh")) {
     try {
-      const res = await axiosInstance.post(`${url}auth/jwt/refresh/`, {
+      const res = await axiosInstance.post(`${url}auth/token/jwt/refresh/`, {
         refresh: localStorage.getItem("refresh"),
       });
       dispatch(refreshSuccess(res.data));
@@ -137,7 +137,7 @@ export const userFollow = (username) => async (dispatch) => {
 export const login = (email, password) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
-    const res = await axios.post(`${url}auth/jwt/create/`, {
+    const res = await axios.post(`${url}auth/token/jwt/create/`, {
       email,
       password,
     });
