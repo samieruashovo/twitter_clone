@@ -15,6 +15,7 @@ import { FaGlobeAfrica, FaLock } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { addTweet } from "../../redux/asyncActions/TweetAsync";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useParams } from "react-router";
 
 const AddTweet = () => {
   const userIn = useSelector((state) => state.userReducer);
@@ -24,7 +25,7 @@ const AddTweet = () => {
   const [tweetImage, setTweetImage] = useState(null);
   const [showEmoji, setShowEmoji] = useState(false);
   const [isPrivate, setIsPrivate] = useState(false);
-
+  const { username } = useParams();
   const dispatch = useDispatch();
   const inputOpenFileRef = useRef(null);
   const { user, isAuthenticated } = userIn;
@@ -49,8 +50,13 @@ const AddTweet = () => {
     setIsPrivate(!isPrivate);
   };
 
-  const submitTweet = () => {
+  const submitTweet = async( event) => {
+    // event.preventDefault();
     const uploadData = new FormData();
+    uploadData.append("username", username);
+    uploadData.append("gender", "female");
+    console.log("gender"+user.gender)
+    
     uploadData.append("title", tweetInput);
     uploadData.append("is_private", isPrivate);
     tweetImage && uploadData.append("image", tweetImage);
@@ -59,6 +65,8 @@ const AddTweet = () => {
     setTweetImage(null);
     setTweetInput("");
     setIsPrivate(false);
+    console.log(uploadData)
+
   };
   return (
     <div className="add-tweet">

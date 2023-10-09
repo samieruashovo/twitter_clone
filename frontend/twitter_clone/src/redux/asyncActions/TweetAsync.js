@@ -107,10 +107,24 @@ export const tweet_specific_user = (username) => async (dispatch) => {
 };
 
 export const addTweet = (uploadData) => async (dispatch) => {
+  
   dispatch(setUploading(true));
   try {
-    const res = await axiosInstance.post(`tweets/`, uploadData);
+    // 'title','username', 'body', 'image', 'is_private', 'gender', 'is_parent', 'liked'
+    // const uploadDat = {
+    //   title: 'Your Tweet Title', // Include the "title" field with a valid value
+    //   username: 'testusername', // Include other fields as needed
+    //   body: 'Tweet body content',
+    //   image:'',
+    //   is_private: false,
+    //   gender: 'female',
+    //   liked: false,
 
+    // }
+    const res = await axiosInstance.post(`create/`, uploadData);
+
+    console.log(uploadData);
+    // const res = await axios.post(`${url}tweets/`, uploadData);
     dispatch(setUploading(false));
     dispatch(tweetAdded(res.data));
     dispatch(setMessage(`Tweet Added !`));

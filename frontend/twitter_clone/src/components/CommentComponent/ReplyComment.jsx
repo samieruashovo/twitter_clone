@@ -45,7 +45,7 @@ const ReplyComment = ({ childCom, parentCom, tweetId, user, setCurIndex }) => {
 
         <Link to={`/${childCom.author.username}`}>
           <img
-            src={`${childCom.author.avatar}`}
+            src={`${childCom.author.profile_pic}`}
             alt="comment-author"
             className="authorImage"
           />

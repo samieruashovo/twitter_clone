@@ -14,39 +14,39 @@ const PopInfo = ({ tweet }) => {
 
   return (
     <>
-      {tweet?.author.username === user?.username ? (
+      {tweet?.username === user?.username ? (
         ""
       ) : (
         <button
-          onClick={() => dispatch(userFollow(tweet?.author.username))}
+          onClick={() => dispatch(userFollow(tweet?.username))}
           className="link-tweet abs-follow"
         >
-          {state ? state : tweet?.author.i_follow ? "Following" : "Follow"}
+          {state ? state : tweet?.following ? "Following" : "Follow"}
         </button>
       )}
 
-      <Link to={`/${tweet?.author.username}`}>
+      <Link to={`/${tweet?.username}`}>
         <img
           alt="img"
-          src={
-            tweet?.author.avatar.includes("http://")
-              ? tweet?.author.avatar
-              : `http://127.0.0.1:8000${tweet?.author.avatar}`
-          }
+          // src={
+          //   tweet?.profile_pic.includes("http://")
+          //     ? tweet?.author.profile_pic
+          //     : `http://127.0.0.1:8000${tweet?.profile_pic}`
+          // }
           className="rounded-circle author-image "
           width="60px"
           height="60px"
         />
       </Link>
-      <strong>{tweet?.author.username}</strong>
-      <span className="side-name">@{tweet?.author.nickname}</span>
-      <p className="side-name">{tweet?.author.bio}</p>
+      <strong>{tweet?.username}</strong>
+      <span className="side-name">@{tweet?.first_name}</span>
+      {/* <p className="side-name">{tweet?.bio}</p> */}
       <div className="d-flex">
-        <FollowInfo
-          number={followers ? followers : tweet.author.followers}
+        {/* <FollowInfo
+          number={followers ? followers : tweet.followers}
           followinfo="followers"
-        />
-        <FollowInfo number={tweet.author.following} followinfo="following" />
+        /> */}
+        {/* <FollowInfo number={tweet.author.following} followinfo="following" /> */}
       </div>
     </>
   );

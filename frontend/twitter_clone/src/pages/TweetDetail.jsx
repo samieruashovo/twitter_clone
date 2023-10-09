@@ -126,10 +126,10 @@ const TweetDetail = () => {
                 </span>
               )}
               <span className="add-tweet-image">
-                <Link to={`/${tweet.author.username}`}>
+                <Link to={`/${tweet.username}`}>
                   <img
                     alt="img"
-                    src={tweet.author.avatar}
+                    src={tweet.profile_pic}
                     className="rounded-circle author-image"
                     width="60px"
                     height="60px"
@@ -164,7 +164,7 @@ const TweetDetail = () => {
               <div className="commentDiv">
                 <img
                   src={
-                    (user && user.avatar) ||
+                    (user && user.profile_pic) ||
                     "https://qph.fs.quoracdn.net/main-qimg-92e5c1d46505b34638aafd281449dabc"
                   }
                   alt="comment-author"

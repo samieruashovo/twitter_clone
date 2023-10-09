@@ -38,20 +38,22 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractUser):
     username = models.CharField(max_length=200,unique=True)
-    nickname = models.CharField(max_length=200,blank=True, null=True)
+    first_name = models.CharField(max_length=200,blank=True, null=True)
+    last_name = models.CharField(max_length=200,blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    gender = models.CharField(max_length=200,blank=True, default='male')
     email = models.CharField(max_length=200, unique=True)
     password = models.CharField(max_length=200)
+    followers = models.ManyToManyField("self",symmetrical=False,related_name="followedme" ,blank=True)
     following = models.ManyToManyField("self",symmetrical=False,related_name="followed" ,blank=True)
     bio = models.TextField(blank=True ,default="")
-    avatar = models.ImageField(default='default.jpg', upload_to='avatars')
-    cover_image = models.ImageField(default='cover.jpg', upload_to='avatars')
-   
-
+    profile_pic = models.ImageField(default='default.jpg', upload_to='avatars')
+    cover_pic = models.ImageField(default='cover.jpg', upload_to='avatars')
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
     #requred for creating user
-    REQUIRED_FIELDS = ['username','avatar']
+    REQUIRED_FIELDS = ['username',]
 
     class Meta:
         ordering = ['-date_joined']

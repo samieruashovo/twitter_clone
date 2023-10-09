@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from notifications.models import Notification
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-import json
+# import json
 
 
 msg = {

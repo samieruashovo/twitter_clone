@@ -29,7 +29,7 @@ class UserDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = UserEditSerializer
     lookup_url_kwarg = 'username'
     lookup_field = 'username'
-    permission_classes = [IsUserOrReadOnly]
+    # permission_classes = [IsUserOrReadOnly]
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

@@ -7,7 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 import axios from "axios";
 import { Provider } from "react-redux";
 import store from "./redux/store";
-const baseURL = process.env.REACT_APP_DOMAIN
+const baseURL = 'http://localhost:8000/'
 
 
 export const axiosInstance = axios.create({

@@ -34,12 +34,12 @@ const TweetPostCard = ({ tweet, dispatch, user }) => {
           <div style={{ display: "flex", flexDirection: "column" }}>
             <strong>
               <Link
-                to={`${tweet.author.username}` || ""}
+                to={`${tweet.username}` || ""}
                 className="mx-2 side-name"
               >
-                {tweet?.author.username === user?.username
+                {tweet?.username === user?.username
                   ? "You "
-                  : tweet.author.username}{" "}
+                  : tweet.username}{" "}
                 retweeted !
               </Link>
             </strong>
@@ -51,26 +51,30 @@ const TweetPostCard = ({ tweet, dispatch, user }) => {
         )}
       </div>
       {tweet.parent ? (
-        <TweetOperation
-          liked={tweet.myparent.iliked}
-          likeTweetD={likeTweetD}
-          like_count={tweet.myparent.like_count}
-          tweet={tweet.myparent}
-          bookmark={tweet.myparent.i_bookmarked}
-          id={tweet.myparent.id}
-          oriId={tweet.id}
-          retweet={tweet?.author.username === user?.username ? true : false}
-        />
+        <>
+          <TweetOperation
+            liked={tweet.myparent.iliked}
+            likeTweetD={likeTweetD}
+            like_count={tweet.myparent.like_count}
+            tweet={tweet.myparent}
+            bookmark={tweet.myparent.i_bookmarked}
+            id={tweet.myparent.id}
+            oriId={tweet.id}
+            retweet={tweet?.username === user?.username ? true : false}
+          />
+        </>
       ) : (
-        <TweetOperation
-          liked={tweet.iliked}
-          likeTweetD={likeTweetD}
-          like_count={tweet.like_count}
-          tweet={tweet}
-          bookmark={tweet.i_bookmarked}
-          id={tweet.id}
-          comment_count={tweet.comment_count}
-        />
+        <>
+          <TweetOperation
+            liked={tweet.iliked}
+            likeTweetD={likeTweetD}
+            like_count={tweet.like_count}
+            tweet={tweet}
+            bookmark={tweet.i_bookmarked}
+            id={tweet.id}
+            comment_count={tweet.comment_count}
+          />
+        </>
       )}
     </div>
   );
@@ -79,15 +83,18 @@ const TweetPostCard = ({ tweet, dispatch, user }) => {
 export default TweetPostCard;
 
 const TweetHasParentOrNot = ({ tweet }) => {
-  const url = process.env.REACT_APP_DOMAIN;
+  const url = "http://localhost:8000/";
   return (
     <>
       <span className="d-flex">
         <span className="add-tweet-image ">
-          <Link to={`/${tweet?.author.username}`}>
+          <Link to={`/${tweet?.username}`}>
             <img
               alt="img"
-              src={tweet?.author.avatar}
+              // src={tweet?.author.avatar}
+              src={
+                "https://dp.profilepics.in/profile-pictures-for-facebook-whatsapp/profile-pics/profile-pics-744.jpg"
+              }
               className="rounded-circle author-image "
               width="60px"
               height="60px"
@@ -95,12 +102,12 @@ const TweetHasParentOrNot = ({ tweet }) => {
           </Link>
         </span>
 
-        <Link to={`${tweet?.author.username}/tweet/${tweet?.id}`}>
+        <Link to={`${tweet?.username}/tweet/${tweet?.id}`}>
           <div className="tweet-content">
             <span id="hover" className="d-flex">
-              {tweet?.author.username}
+              {/* {tweet?.username} */}
               <span className="side-name">
-                @ {tweet?.author.nickname} |{" "}
+                @ {tweet?.username} |{" "}
                 {Moment(tweet?.created).fromNow(true)}
                 <span className="mx-2">
                   {tweet?.is_private ? <FaLock /> : <BiGlobe />}

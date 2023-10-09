@@ -13,7 +13,7 @@ import { addComment } from "../redux/asyncActions/CommentAsync";
 import AddPicker from "./SmallComponent/AddPicker";
 
 export const TweetOperation = ({
-  bookmark,
+  // bookmark,
   liked,
   id,
   oriId = null,
@@ -35,13 +35,13 @@ export const TweetOperation = ({
 
   useEffect(() => {
     setClick(liked);
-    setBookmarked(bookmark);
-  }, [liked, bookmark]);
+    // setBookmarked(bookmark);
+  }, [liked, /*bookmark8*/]);
 
-  const onBookmark = (id) => {
-    dispatch(bookmarkTweet(id));
-    setBookmarked(!bookmarked);
-  };
+  // const onBookmark = (id) => {
+  //   dispatch(bookmarkTweet(id));
+  //   setBookmarked(!bookmarked);
+  // };
   const setId = (ia) => {
     setComId(ia);
   };
@@ -146,7 +146,7 @@ export const TweetOperation = ({
             />
           </i>
         ) : (
-          <i data-toggle="tooltip" title="Re- Tweet" className="tweetIcons">
+          <i data-toggle="tooltip" title="Re-Tweet" className="tweetIcons">
             <AiOutlineRetweet onClick={() => sendReTweet(id)} />
           </i>
         )}
@@ -169,7 +169,7 @@ export const TweetOperation = ({
             data-placement="up"
             className="tweetIcons pointer"
           >
-            <FiShare color="lightgreen" onClick={() => onBookmark(id)} />
+            {/* <FiShare color="lightgreen" onClick={() => onBookmark(id)} /> */}
           </i>
         ) : (
           <i
@@ -177,7 +177,7 @@ export const TweetOperation = ({
             title="Bookmark!"
             className="tweetIcons pointer"
           >
-            <FiShare onClick={() => onBookmark(id)} />
+            {/* <FiShare onClick={() => onBookmark(id)} /> */}
           </i>
         )}
       </div>

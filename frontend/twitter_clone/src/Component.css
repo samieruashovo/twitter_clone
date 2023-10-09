@@ -99,7 +99,15 @@
 }
 .add-tweet-image {
   position: relative;
-  display: block;
+  display: flex;
+}
+.rounded-circle {
+  object-fit: cover;
+
+  position: absolute;
+  
+  border: 5px solid white;
+  border-radius: 50%;
 }
 
 #popup {

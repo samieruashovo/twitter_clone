@@ -6,7 +6,7 @@ import TrendBar from "./TweetComponents/TrendBar";
 const Second = (props) => {
   return (
     <>
-      <Sidebar />
+     <Sidebar/>
       <div className="second" id="second">
         <div className="second-tweet">{props.children}</div>
         <TrendBar />

@@ -91,8 +91,16 @@ WSGI_APPLICATION = "twitter_clone.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+        "NAME": BASE_DIR / "male_tweet.db.sqlite3",
+    },
+    "female_user_db": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "female_tweet.db.sqlite3",
+    },
+    "male_user_db": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "male_tweet.db.sqlite3",
+    },
 }
 
 
@@ -162,7 +170,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = env('email')
-EMAIL_HOST_PASSWORD = env('password')
+EMAIL_HOST_PASSWORD = 'ilyvqakvwqmhhufn'
 
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("JWT",),
@@ -196,6 +204,7 @@ DJOSER = {
     },
 }
 
+DATABASE_ROUTERS = [ "twitter_clone.routers.db_routers.TweetRouter",  "twitter_clone.routers.db_routers.Default"]
 
 # CORS_ALLOWED_ORIGINS = [
 

@@ -51,7 +51,7 @@ const CommentCard = ({ tweetId, user, comment }) => {
       <div key={comment.id} className="comment-innerDiv">
         <Link to={`/${comment.author.username}`}>
           <img
-            src={`${comment.author.avatar}`}
+            src={`${comment.author.profile_pic}`}
             alt="comment-author"
             className="authorImage"
           />

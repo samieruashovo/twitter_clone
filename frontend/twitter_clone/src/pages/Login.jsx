@@ -13,7 +13,7 @@ const Login = () => {
   const { isAuthenticated } = user;
   const [values, handleChange] = useForm();
   const [type, setType] = useState("password");
-  const { email, password } = values;
+  const { email, password, username } = values;
   const dispatch = useDispatch();
   const history = useNavigate();
   useEffect(() => {
@@ -22,7 +22,7 @@ const Login = () => {
 
   const loginMe = (e) => {
     e.preventDefault();
-    dispatch(login(email, password));
+    dispatch(login(email, password, username));
   };
   const changetype = () => {
     if (type === "password") {
@@ -60,6 +60,29 @@ const Login = () => {
             className="inputTag"
             style={{ paddingRight: 60 }}
             placeholder="password"
+          />
+
+          <BiKey
+            style={{
+              position: "absolute",
+              top: -5,
+              right: 20,
+              fontSize: 30,
+              cursor: "pointer",
+            }}
+            onClick={changetype}
+            color="#1da1f2"
+          />
+        </span>
+        <span className="position-relative">
+          <input
+            value={username || ""}
+            onChange={handleChange}
+            type={type}
+            name="username"
+            className="inputTag"
+            style={{ paddingRight: 60 }}
+            placeholder="username"
           />
 
           <BiKey

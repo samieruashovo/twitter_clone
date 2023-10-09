@@ -146,7 +146,7 @@ export const NotificationCard = ({
             <strong className="mx-3">
               <img
                 className="rounded-circle author-image"
-                src={list.from_user.avatar}
+                src={list.from_user.profile_pic}
                 alt="user avatar"
               />{" "}
               <br />

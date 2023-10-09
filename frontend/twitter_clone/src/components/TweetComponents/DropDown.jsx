@@ -14,7 +14,7 @@ const DropDown = ({ tweetId, user, tweet, target }) => {
       className="dropdown-menu dropdown-menu-right dropdownMenu"
       aria-labelledby={target}
     >
-      {user?.username === tweet.author.username ? (
+      {user?.username === tweet.username ? (
         <p onClick={() => deletePost(tweetId)}>
           <AiOutlineDelete color="#e0245e" />
           <span style={{ color: "#e0245e" }}>Delete Post</span>

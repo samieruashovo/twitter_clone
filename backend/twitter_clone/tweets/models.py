@@ -6,13 +6,14 @@ from django.utils.translation import gettext_lazy as _
 
 
 class TweetManager(models.Manager):
+    # using = 'default'
     # show only public field (private=False) to other user but not for the author of the tweet
     def only_public_or_author(self, user):
         if user.is_authenticated:
             user_i_follow = user.following.all()
             #showing only the posts of user i follow
-            feed_tweets = Tweet.objects.filter(is_private=False,author_id__in=user_i_follow) 
-            tweets = Tweet.objects.filter(author=user)
+            feed_tweets = Tweet.objects.filter(is_private=False) 
+            tweets = Tweet.objects.filter(username=user.username)
             return feed_tweets | tweets
         return Tweet.objects.filter(is_private=False)
 
@@ -20,16 +21,27 @@ class TweetManager(models.Manager):
 
 
 class Tweet(models.Model):
+    # def only_public_or_author(self, user):
+    #     if user.is_authenticated:
+    #         user_i_follow = user.following.all()
+    #         #showing only the posts of user i follow
+    #         feed_tweets = Tweet.objects.filter(is_private=False,author_id__in=user_i_follow) 
+    #         tweets = Tweet.objects.filter(username=user.username)
+    #         return feed_tweets | tweets
+    #     return Tweet.objects.filter(is_private=False)
     title = models.CharField(max_length=200)
+    username = models.TextField(blank=True)
     body = models.TextField(blank=True)
     liked = models.ManyToManyField(User, blank=True)
     image = models.ImageField(blank=True, null=True, upload_to='tweetspic')
-    bookmark = models.ManyToManyField(
-        User, related_name="bookmark", blank=True, default=None)
-    author = models.ForeignKey(
-        User, related_name="users", on_delete=models.CASCADE)
-    parent = models.ForeignKey(
-        "self", on_delete=models.CASCADE, related_name='parenttweet', null=True, blank=True)
+    is_parent = models.BooleanField(default=True, blank=True, null=True)
+    gender = models.CharField(max_length=200,blank=True, default='female')
+    # bookmark = models.ManyToManyField(
+    #     User, related_name="bookmark", blank=True, default=None)
+    # author = models.ForeignKey(
+    #     User, related_name="users", on_delete=models.CASCADE)
+    # parent = models.ForeignKey(
+    #     "self", on_delete=models.CASCADE, related_name='parenttweet', null=True, blank=True)
     share_count = models.IntegerField(blank=True, null=True, default=0)
     is_private = models.BooleanField(default=False, blank=True, null=True)
     isEdited = models.BooleanField(default=False, blank=True, null=True)
@@ -46,14 +58,97 @@ class Tweet(models.Model):
         return self.title
 
 
-    @property
-    def is_parent(self):
-        return True if self.parent is None else False
+    # @property
+    # def is_parent(self):
+    #     return self.is_parent
 
     @property
     def like_count(self):
         return self.liked.count()
 
+
+# class FemaleTweet(models.Model):
+#     # def only_public_or_author(self, user):
+#     #     if user.is_authenticated:
+#     #         user_i_follow = user.following.all()
+#     #         #showing only the posts of user i follow
+#     #         feed_tweets = Tweet.objects.filter(is_private=False,author_id__in=user_i_follow) 
+#     #         tweets = Tweet.objects.filter(username=user.username)
+#     #         return feed_tweets | tweets
+#     #     return Tweet.objects.filter(is_private=False)
+#     title = models.CharField(max_length=200)
+#     username = models.TextField(blank=True)
+#     body = models.TextField(blank=True)
+#     liked = models.ManyToManyField(User, blank=True)
+#     image = models.ImageField(blank=True, null=True, upload_to='tweetspic')
+#     is_parent = models.BooleanField(default=True, blank=True, null=True)
+#     gender = models.CharField(max_length=200,blank=True, default='male')
+#     # bookmark = models.ManyToManyField(
+#     #     User, related_name="bookmark", blank=True, default=None)
+#     # author = models.ForeignKey(
+#     #     User, related_name="users", on_delete=models.CASCADE)
+#     # parent = models.ForeignKey(
+#     #     "self", on_delete=models.CASCADE, related_name='parenttweet', null=True, blank=True)
+#     share_count = models.IntegerField(blank=True, null=True, default=0)
+#     is_private = models.BooleanField(default=False, blank=True, null=True)
+#     isEdited = models.BooleanField(default=False, blank=True, null=True)
+#     updated = models.DateTimeField(auto_now=True)
+#     created = models.DateTimeField(auto_now_add=True)
+#     objects = TweetManager()
+
+#     class Meta:
+#         ordering = ['-created']
+#         verbose_name = _("Tweet")
+#         verbose_name_plural = _("Tweets")
+
+#     def __str__(self):
+#         return self.title
+
+
+#     # @property
+#     # def is_parent(self):
+#     #     return self.is_parent
+
+#     @property
+#     def like_count(self):
+#         return self.liked.count()
+
+
+# class FemaleTweet(models.Model):
+#     title = models.CharField(max_length=200)
+#     body = models.TextField(blank=True)
+#     liked = models.ManyToManyField(User, blank=True)
+#     image = models.ImageField(blank=True, null=True, upload_to='tweetspic')
+#     # bookmark = models.ManyToManyField(
+#     #     User, related_name="bookmark", blank=True, default=None)
+#     author = models.CharField(max_length=200)
+#     # author = models.ForeignKey(
+#     #     User, related_name="users", on_delete=models.CASCADE)
+#     parent = models.ForeignKey(
+#         "self", on_delete=models.CASCADE, related_name='parenttweet', null=True, blank=True)
+#     share_count = models.IntegerField(blank=True, null=True, default=0)
+#     is_private = models.BooleanField(default=False, blank=True, null=True)
+#     isEdited = models.BooleanField(default=False, blank=True, null=True)
+#     updated = models.DateTimeField(auto_now=True)
+#     created = models.DateTimeField(auto_now_add=True)
+#     objects = TweetManager()
+
+#     class Meta:
+#         ordering = ['-created']
+#         verbose_name = _("Tweet")
+#         verbose_name_plural = _("Tweets")
+
+#     def __str__(self):
+#         return self.title
+
+
+#     @property
+#     def is_parent(self):
+#         return True if self.parent is None else False
+
+#     @property
+#     def like_count(self):
+#         return self.liked.count()
 
 class Comment(models.Model):
     body = models.TextField()

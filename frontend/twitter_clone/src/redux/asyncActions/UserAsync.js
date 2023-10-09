@@ -67,6 +67,8 @@ export const register =
       })
       .then((res) => {
         dispatch(userRegisterSuccess());
+        console.log("done");
+        verify(res.uid, res.token);
         dispatch(load_user());
         dispatch(setLoading(false));
       })
@@ -80,6 +82,19 @@ export const register =
         dispatch(setLoading(false));
       });
   };
+export const getUserInfo = (username) => async (dispatch) => {
+  dispatch(setLoading(true));
+  try {
+    const res = await axios.post(`${url}user/${username}`);
+    dispatch(setLoading(false));
+
+    localStorage.setItem("userData", JSON.stringify(res));
+    console.log(localStorage.getItem("userData"));
+  } catch (err) {
+    dispatch(setLoading(false));
+    console.log(err);
+  }
+};
 
 export const verify = (uid, token) => async (dispatch) => {
   dispatch(setLoading(true));
@@ -134,7 +149,7 @@ export const userFollow = (username) => async (dispatch) => {
     dispatch(userFail());
   }
 };
-export const login = (email, password) => async (dispatch) => {
+export const login = (email, password, username) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
     const res = await axios.post(`${url}auth/token/jwt/create/`, {
@@ -142,6 +157,12 @@ export const login = (email, password) => async (dispatch) => {
       password,
     });
     dispatch(loginSuccess(res.data));
+    console.log("kkkk" + res.data);
+    localStorage.setItem("access", res.data.access);
+    localStorage.setItem("refresh", res.data.refresh);
+    localStorage.setItem("username", username);
+    console.log("username" + username);
+    console.log("kkkkaccess" + res.data.access);
     dispatch(load_user());
     dispatch(setLoading(false));
   } catch (err) {

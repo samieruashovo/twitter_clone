@@ -24,10 +24,10 @@ export const TweetContent = ({
     <div className="tweet-content">
       <div>
         <span style={{ display: "flex", alignItems: "center" }}>
-          {tweet.author.username}
+          {tweet.username}
 
           <span className="mx-2 side-name">
-            @ {tweet.author.username} |
+            @ {tweet.username} |
             {/* {Moment(tweet.created ).format('MMM Do YY')} */}
             <span className="mx-1">{Moment(tweet.created).fromNow(true)}</span>
             {tweet.is_private ? <FaLock /> : <BiGlobe />}

@@ -30,7 +30,7 @@ class PrivateChat(BaseModel):
     user2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user2")
     connected_users = models.ManyToManyField(
         User, blank=True, related_name="connected_users")
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     objects = PrivateChatManager()
 
 

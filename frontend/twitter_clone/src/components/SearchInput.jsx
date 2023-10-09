@@ -52,7 +52,7 @@ export default SearchInput;
 export const SearchResult = ({ res }) => {
   return (
     <div className="d-flex result">
-      <img className="authorImage" src={res?.avatar} alt="your result" />
+      <img className="authorImage" src={res?.profile_pic} alt="your result" />
       <div className="mx-3">
         <strong>{res.username}</strong>
         <p className="side-name">{res.bio}</p>

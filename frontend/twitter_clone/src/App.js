@@ -19,6 +19,7 @@ import ChatMessage from "./pages/ChatMessage";
 import PrivateRoomChat from "./pages/PrivateRoomChat";
 import FollowUser from "./pages/FollowUser";
 import { getNotifications } from "./redux/asyncActions/NotificationAsync";
+import Sidebar from "./components/Sidebar";
 
 function App() {
   const userIn = useSelector((state) => state.userReducer);
@@ -55,7 +56,7 @@ function App() {
     if (localStorage.getItem("access")) {
       websocketCon();
     }
-  }, [dispatch]);
+  }, [dispatch, websocketCon]);
 
   useEffect(() => {
     dispatch(load_user());
@@ -70,7 +71,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        
+        <Route path="/" element={<Home/>} />
         {/* <Route path="/" exact component={Home} /> */}
         <Route path="/activate/:uid/:token" element={<Activate />} />
         {/* <Route path="/activate/:uid/:token" exact component={Activate} /> */}
@@ -97,7 +99,7 @@ function App() {
         <Route path="/explore" element={<Explore />} />
 
         {/* <Route path="/explore" component={Explore} /> */}
-        <Route path="/:username" element={<Profile />} />
+        <Route path="user/:username" element={<Profile />} />
 
         {/* <Route path="/:username" exact component={Profile} /> */}
         <Route path="/:username/tweet/:id" element={<TweetDetail />} />

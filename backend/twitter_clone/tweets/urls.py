@@ -5,6 +5,7 @@ from . import views
 router = DefaultRouter()
 
 router.register(r"", views.TweetViewSet, basename="tweetslist")
+# router.register(r"femaletweet", views.FemaleTweetViewSet, basename="femaletweetslist")
 router.register(r"explore/global", views.ExploreTweetViewSet)
 
 urlpatterns = [

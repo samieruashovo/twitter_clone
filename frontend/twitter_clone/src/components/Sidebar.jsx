@@ -17,7 +17,8 @@ import {
   BiHash,
   BiAddToQueue,
 } from "react-icons/bi";
-import { CgMoreO } from "react-icons/cg";
+
+import { Row, Col } from "react-bootstrap";
 import {
   checkAuthenticated,
   load_user,
@@ -50,7 +51,7 @@ const Sidebar = () => {
   };
   const { user, isAuthenticated } = userIn;
   const goOut = () => {
-    window.location.href = "http://github.com/learningnoobi/twitter-react";
+    window.location.href = "";
   };
   return (
     <>
@@ -63,27 +64,31 @@ const Sidebar = () => {
       )}
       <div className={`nav ${sidebarClass}`} id="nav">
         <ul className="navbar-nav">
-          <li>
-            <Link to="/">
-              <i>
-                <RiTwitterFill />
-              </i>
-            </Link>
-            <span
-              className="link-text close"
-              onClick={() => dispatch(showSidebar(""))}
-            >
-              X
-            </span>
-          </li>
-          <li>
-            <NavLink to="/">
-              <i>
-                <RiHome7Fill />
-              </i>
-              <span className="link-text">Home</span>
-            </NavLink>
-          </li>
+          <Row>
+            <li>
+              <Link to="/">
+                <i>
+                  <RiTwitterFill />
+                </i>
+              </Link>
+              <span
+                className="link-text close"
+                onClick={() => dispatch(showSidebar(""))}
+              >
+                X
+              </span>
+            </li>
+          </Row>
+          <Row>
+            <li>
+              <NavLink to="/">
+                <i>
+                  <RiHome7Fill />
+                </i>
+                <span className="link-text">Home</span>
+              </NavLink>
+            </li>
+          </Row>
           <li>
             <Link to="/explore">
               <i>
@@ -123,8 +128,10 @@ const Sidebar = () => {
             </Link>
           </li>
           {isAuthenticated && (
+           
             <li>
-              <Link to={(user && `/${user.username}`) || "profile"}>
+              
+              <Link to={(`user/${localStorage.getItem('username')}`) || "profile"}>
                 <i>
                   <BiUser />
                 </i>
@@ -133,12 +140,12 @@ const Sidebar = () => {
             </li>
           )}
 
-          <li style={{ cursor: "pointer" }} className="ml-2 p-1">
+          {/* <li style={{ cursor: "pointer" }} className="ml-2 p-1">
             <i onClick={goOut}>
               <RiGithubFill />
             </i>
             <span className="link-text">GitHub</span>
-          </li>
+          </li> */}
 
           <li>
             {isAuthenticated ? (

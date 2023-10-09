@@ -3,12 +3,13 @@ import Second from "../Second";
 import AddTweet from "./AddTweet";
 import TweetCard from "./TweetCard";
 import TweetHeader from "./tweetHeader";
-import { useNavigate  } from "react-router-dom";
+import Sidebar from "../Sidebar";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { load_more } from "../../redux/asyncActions/TweetAsync";
 import { setSearch } from "../../redux/slices/NotificationSlice";
 const HomeTweets = () => {
-  const history = useNavigate ();
+  const history = useNavigate();
   const dispatch = useDispatch();
   const tweets = useSelector((state) => state.tweetReducer);
   const meta = tweets.meta;
@@ -28,20 +29,22 @@ const HomeTweets = () => {
     }
   };
   return (
-    <Second>
-      <TweetHeader headerName="Home" />
-      <AddTweet />
-      <TweetCard />
-      {/* load more button */}
+    <>
+      <Second>
+        <TweetHeader headerName="Home" />
+        <AddTweet />
+        <TweetCard />
+        {/* load more button */}
 
-      {meta?.next && (
-        <div className="mt-3 d-flex justify-content-center">
-          <button onClick={loadMore} className="link-tweet">
-            Load more
-          </button>
-        </div>
-      )}
-    </Second>
+        {meta?.next && (
+          <div className="mt-3 d-flex justify-content-center">
+            <button onClick={loadMore} className="link-tweet">
+              Load more
+            </button>
+          </div>
+        )}
+      </Second>
+    </>
   );
 };
 
