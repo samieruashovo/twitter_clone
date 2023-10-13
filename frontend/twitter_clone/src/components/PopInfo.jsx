@@ -28,6 +28,9 @@ const PopInfo = ({ tweet }) => {
       <Link to={`/${tweet?.username}`}>
         <img
           alt="img"
+              src={
+                "https://dp.profilepics.in/profile-pictures-for-facebook-whatsapp/profile-pics/profile-pics-744.jpg"
+              }
           // src={
           //   tweet?.profile_pic.includes("http://")
           //     ? tweet?.author.profile_pic

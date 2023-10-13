@@ -25,7 +25,24 @@ export const load_user = () => async (dispatch) => {
   if (localStorage.getItem("access")) {
     try {
       const res = await axiosInstance.get(`${url}auth/users/me/`);
+      console.log("load_user" + res.data.username);
+      console.log(localStorage.getItem("userData"));
+      // console.log("load_user2"+res.data.)
+      // while (res.data.username !== undefined) {
+      //   console.log("running while loop")
+      //   getUserInfo(res.data.username);
+      //   if (res.data.username === undefined) {
+      //     break;
+      //   }
+      // }
+
+      // localStorage.setItem("username", res.data.username);
+      // localStorage.setItem("gender",res.data.gender);
+      dispatch(getUserInfo('shovo'));
+
       dispatch(userSuccess(res.data));
+      // console.log("ksdjdj")
+      // getUserInfo(res.data.username);
     } catch (err) {
       const res = err.response.data.code;
       if (localStorage.getItem("refresh")) {
@@ -83,9 +100,11 @@ export const register =
       });
   };
 export const getUserInfo = (username) => async (dispatch) => {
+  console.log("running get user info");
   dispatch(setLoading(true));
   try {
-    const res = await axios.post(`${url}user/${username}`);
+    console.log("kssksk");
+    const res = await axios.get(`${url}user/${username}/`);
     dispatch(setLoading(false));
 
     localStorage.setItem("userData", JSON.stringify(res));
@@ -157,12 +176,11 @@ export const login = (email, password, username) => async (dispatch) => {
       password,
     });
     dispatch(loginSuccess(res.data));
-    console.log("kkkk" + res.data);
     localStorage.setItem("access", res.data.access);
     localStorage.setItem("refresh", res.data.refresh);
+    console.log("login" + res.data.gender);
     localStorage.setItem("username", username);
     console.log("username" + username);
-    console.log("kkkkaccess" + res.data.access);
     dispatch(load_user());
     dispatch(setLoading(false));
   } catch (err) {

@@ -9,6 +9,7 @@ urlpatterns = [
     path('tweets/', include('tweets.urls')),
     path('notify/', include('notifications.urls')),
     path('chats/', include('chat.urls')),
+    path('community/', include('community.urls')),
     path('auth/', include('djoser.urls')),
     path('auth/token/',  include('djoser.urls.jwt')),
     path("create/", views.TweetViewSet.as_view({'post': 'create_tweet'}), name="create-tweet"),

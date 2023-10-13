@@ -9,11 +9,11 @@ const TweetHeader = ({ headerName, back = true }) => {
   return (
     <div className="tweet-header">
       <div className="d-flex align-items-center">
-        {back && (
+        {/* {back && (
           <i className="btns">
             <AiOutlineArrowLeft onClick={() => history.goBack()} />
           </i>
-        )}
+        )} */}
         <div className="d-flex justify-content-center align-items-center">
           <h4 className="mx-2">{headerName}</h4>
         </div>

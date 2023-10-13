@@ -119,14 +119,14 @@ const Sidebar = () => {
               </Link>
             </li>
           )}
-          <li>
+          {/* <li>
             <Link to="/bookmark">
               <i>
                 <BiBookmark />
               </i>
               <span className="link-text">Bookmarks</span>
             </Link>
-          </li>
+          </li> */}
           {isAuthenticated && (
            
             <li>

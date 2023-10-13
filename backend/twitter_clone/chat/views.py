@@ -2,14 +2,14 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from .models import PrivateChat, Message
 from users.models import User
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.db.models import Q
 from .serializers import MessageSerializer, PrivateRoomSerializer
 from twitter_clone.pagination import CustomPagination
 from notifications.models import Notification
 @api_view(['GET'])
-@permission_classes((IsAuthenticated,))
+# @permission_classes((IsAuthenticated,))
 def return_chat_messages(request, username):
     print('username is ', username)
     u2 = User.objects.get(username=username)

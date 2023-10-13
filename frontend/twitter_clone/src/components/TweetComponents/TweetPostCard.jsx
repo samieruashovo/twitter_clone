@@ -23,12 +23,13 @@ const TweetPostCard = ({ tweet, dispatch, user }) => {
             aria-haspopup="true"
             aria-expanded="false"
           />
-          <DropDown
+          {/* this is delete button */}
+          {/* <DropDown
             target={`${tweet.id}dropdown`}
             tweet={tweet}
             user={user}
             tweetId={tweet.id}
-          />
+          /> */}
         </div>
         {tweet.parent ? (
           <div style={{ display: "flex", flexDirection: "column" }}>

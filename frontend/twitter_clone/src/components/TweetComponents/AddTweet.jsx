@@ -51,11 +51,16 @@ const AddTweet = () => {
   };
 
   const submitTweet = async( event) => {
+    const jsonData = localStorage.getItem("userData");
+    const dataObject = JSON.parse(jsonData);
+
+// Step 3: Access the "username" property
+// const username = dataObject.data.username;
     // event.preventDefault();
     const uploadData = new FormData();
-    uploadData.append("username", username);
-    uploadData.append("gender", "female");
-    console.log("gender"+user.gender)
+    uploadData.append("username", dataObject.data.username);
+    uploadData.append("gender", dataObject.data.gender);
+    console.log("gender"+ dataObject.data.gender)
     
     uploadData.append("title", tweetInput);
     uploadData.append("is_private", isPrivate);
@@ -65,9 +70,15 @@ const AddTweet = () => {
     setTweetImage(null);
     setTweetInput("");
     setIsPrivate(false);
-    console.log(uploadData)
+    // console.log(uploadData)
 
   };
+  const profilePic = async () => {
+    const jsonData = localStorage.getItem("userData");
+    const dataObject = JSON.parse(jsonData);
+    console.log("profile pic"+dataObject.data.profile_pic)
+    return dataObject.data.profile_pic;
+  }
   return (
     <div className="add-tweet">
       <>
@@ -75,7 +86,10 @@ const AddTweet = () => {
           <Link to={(user && `${user.username}`) || "/"}>
             <img
               alt="img"
-              src={(user && user.avatar) || loadingGif}
+              src={
+                "https://dp.profilepics.in/profile-pictures-for-facebook-whatsapp/profile-pics/profile-pics-744.jpg"
+              }
+              // src={(profilePic) || loadingGif}
               className="rounded-circle author-image"
               width="60px"
               height="60px"
@@ -110,7 +124,7 @@ const AddTweet = () => {
           )}
 
           <div>
-            <div>
+             <div>
               {PrevImage && (
                 <span style={{ position: "relative" }}>
                   <img
@@ -133,8 +147,8 @@ const AddTweet = () => {
                   />
                 </span>
               )}
-            </div>
-            <ul className="add-tweet-icon">
+            </div> 
+             <ul className="add-tweet-icon">
               <div className="add-icon">
                 <li
                   data-toggle="tooltip"
@@ -149,10 +163,10 @@ const AddTweet = () => {
                     style={{ display: "none" }}
                   />
 
-                  <AiOutlinePicture
+                  {/* <AiOutlinePicture
                     data-placement="up"
                     onClick={showOpenFileDlg}
-                  />
+                  /> */}
                 </li>
                 <li
                   data-toggle="tooltip"
@@ -160,7 +174,7 @@ const AddTweet = () => {
                   data-placement="bottom"
                   className="side-icon"
                 >
-                  <AiOutlineSmile onClick={() => setShowEmoji(!showEmoji)} />
+                  {/* <AiOutlineSmile onClick={() => setShowEmoji(!showEmoji)} /> */}
                 </li>
                 <li
                   data-toggle="tooltip"
@@ -168,7 +182,7 @@ const AddTweet = () => {
                   data-placement="bottom"
                   className={`side-icon ${PrevImage && "disabled"}`}
                 >
-                  <AiOutlineBarChart />
+                  {/* <AiOutlineBarChart /> */}
                 </li>
                 <li
                   data-toggle="tooltip"
@@ -176,7 +190,7 @@ const AddTweet = () => {
                   data-placement="bottom"
                   className={`side-icon ${PrevImage && "disabled"}`}
                 >
-                  <AiOutlineGif />
+                  {/* <AiOutlineGif /> */}
                 </li>
                 <li
                   data-toggle="tooltip"
@@ -184,9 +198,9 @@ const AddTweet = () => {
                   data-placement="bottom"
                   className={`side-icon ${PrevImage && "disabled"}`}
                 >
-                  <AiOutlineSchedule />
+                  {/* <AiOutlineSchedule /> */}
                 </li>
-              </div>
+              </div> 
 
               <button
                 disabled={!tweetInput}

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'tweets',
     'chat',
     'notifications',
+    'community',
     'djoser',
 
 
@@ -93,13 +94,17 @@ DATABASES = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "male_tweet.db.sqlite3",
     },
+    "main_db": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "main_db.db.sqlite3",
+    },
     "female_user_db": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "female_tweet.db.sqlite3",
     },
     "male_user_db": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "male_tweet.db.sqlite3",
+        "NAME": os.path.join(BASE_DIR / "male_tweet.db.sqlite3",)
     },
 }
 
@@ -148,15 +153,19 @@ REST_FRAMEWORK = {
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "/static/"
+# STATIC_URL = "/static/"
 
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
-MEDIA_URL = '/media/'
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'static',
+# ]
+# MEDIA_URL = '/media/'
 
 # MEDIA_ROOT = BASE_DIR / 'media'
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -204,8 +213,8 @@ DJOSER = {
     },
 }
 
-DATABASE_ROUTERS = [ "twitter_clone.routers.db_routers.TweetRouter",  "twitter_clone.routers.db_routers.Default"]
-
+DATABASE_ROUTERS = [ "twitter_clone.routers.db_routers.TweetRouter"]
+#  "twitter_clone.routers.db_routers.Default", , "twitter_clone.routers.db_routers.MainRouter"
 # CORS_ALLOWED_ORIGINS = [
 
 #     env('crossdomain')

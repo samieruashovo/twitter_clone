@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+import { getUserInfo } from "../asyncActions/UserAsync";
 const initialState = {
   user: null,
   isLoading: false,
@@ -32,6 +32,7 @@ export const userRegister = createSlice({
       state.isAuthenticated = true;
     },
     userSuccess: (state, action) => {
+      
       state.user = action.payload;
       state.isAuthenticated = true;
     },
