@@ -7,11 +7,14 @@ router = DefaultRouter()
 router.register(r"", views.TweetViewSet, basename="tweetslist")
 # router.register(r"femaletweet", views.FemaleTweetViewSet, basename="femaletweetslist")
 router.register(r"explore/global", views.ExploreTweetViewSet)
+# router.register(r"commentsx/", views.SinglePostCommentViewSetc, basename="commentslist")
+
+# router.register(r"comments/l", views.ExploreLocalTweetViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
     path("post/retweet/", views.ReTweetView , name="retweet-view"),
-    path("comments/<int:pk>/", views.ComentView.as_view(), name="comment-view"),
+    path("comments/list/<str:pk>", views.ComentView.as_view()),
     path(
         "comment_detail/<int:pk>/",
         views.CommentDetail.as_view(),

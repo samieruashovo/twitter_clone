@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from .models import Comment, Post
-from .serializers import (PostForm, PostSerializer, CommentSerializer) #
+from .serializers import (PostCommentSerializer, PostForm, PostSerializer) #
 # from rest_framework.permissions import isAuthenticated
 from .permissions import IsAuthorOrReadOnly
 from rest_framework.response import Response
@@ -42,8 +42,39 @@ class PostViewSet(viewsets.ModelViewSet):
             return Response({'error': form.error}, status=400)
         
 
-# class PostCommentView(APIView):
-#     def get_object
+class PostComentView(APIView):
+    def get(self, request,pk):
+        print(request.data)
+        comments = list(chain(Comment.objects.using('male_user_db').filter(
+            post_uuid=pk).order_by('-created'), Comment.objects.using('female_user_db').filter(
+            post_uuid=pk).order_by('-created')))
+        paginator = CustomPagination()
+        result_page = paginator.paginate_queryset(comments,request)
+        serializer = PostCommentSerializer(
+            result_page, many=True, context={'request': request})
+        print(serializer.data)
+        # return Response(serializer.data)
+        return paginator.get_paginated_response(serializer.data)
+
+    def post(self,request,pk):
+        data = request.data
+        print(data)
+        # tweet = self.get_object(pk)
+        if len(data.get('body')) < 1:
+            raise exceptions.APIException('Cannot be blank')
+        new_comment = Comment(body=data.get(
+            'body'), username=data.get('username'),gender=data.get('gender'), post_uuid=data.get('post_uuid'))
+        new_comment.save()
+        # if request.username != tweet.username:
+        #     Notification.objects.get_or_create(
+        #         notification_type='R',
+        #         tweet=tweet,
+        #         to_user=tweet.username,
+        #         from_user=request.username)
+        serializer = PostCommentSerializer(
+            new_comment, context={'request': request})
+        return Response(serializer.data,status=HTTP_201_CREATED)
+
 # class ExplorePostViewSet(viewsets.ReadOnlyModelViewSet):
 #     queryset = Post.objects.all()
 #     # serializer_class = PostSerializer

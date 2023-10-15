@@ -6,6 +6,7 @@ router = DefaultRouter()
 router.register(r"", views.PostViewSet, basename="community")
 
 urlpatterns =[
-    path("", include(router.urls)),
+    path("", include(router.urls)), 
+    path("comments/list/<str:pk>", views.PostComentView.as_view()),
     # path("communitypost/", views.)
 ]

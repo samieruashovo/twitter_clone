@@ -137,46 +137,64 @@ def ReTweetView(request):
         return Response(serializer.data,status=HTTP_201_CREATED)
 
 
-    
-
-
-
 class ComentView(APIView):
+    print("running")
     # permission_classes= [IsAuthenticated]
 
-    def get_object(self,pk):
-        tweet = Tweet.objects.get(id=pk)
-        return tweet
+    # def get_object(self,pk):
+    #     tweet = Tweet.objects.get(id=pk)
+    #     return tweet
+    
 
     def get(self, request,pk):
-        tweet = self.get_object(pk)
-        comments = Comment.objects.filter(
-            post=tweet, parent=None).order_by('-created')
+        print("running2")
+        print(request.data)
+        print(pk)
+        # tweet = self.get_object(pk)
+        # comments = Comment.objects.using('male_user_db').all()
+        # return list(chain(Tweet.objects.using('male_user_db').all(), Tweet.objects.using('female_user_db').all()))
+        
+        comments = list(chain(Comment.objects.using('male_user_db').filter(
+            tweet_uuid=pk).order_by('-created'), Comment.objects.using('female_user_db').filter(
+            tweet_uuid=pk).order_by('-created')))
         paginator = CustomPagination()
         result_page = paginator.paginate_queryset(comments,request)
         serializer = CommentSerializer(
             result_page, many=True, context={'request': request})
+        print(serializer.data)
         # return Response(serializer.data)
         return paginator.get_paginated_response(serializer.data)
 
     def post(self,request,pk):
         data = request.data
-        tweet = self.get_object(pk)
+        print(data)
+        # tweet = self.get_object(pk)
         if len(data.get('body')) < 1:
             raise exceptions.APIException('Cannot be blank')
         new_comment = Comment(body=data.get(
-            'body'), username=request.username, post=tweet)
+            'body'), username=data.get('username'),gender=data.get('gender'), tweet_uuid=data.get('tweet_uuid'))
         new_comment.save()
-        if request.username != tweet.username:
-            Notification.objects.get_or_create(
-                notification_type='R',
-                tweet=tweet,
-                to_user=tweet.username,
-                from_user=request.username)
+        # if request.username != tweet.username:
+        #     Notification.objects.get_or_create(
+        #         notification_type='R',
+        #         tweet=tweet,
+        #         to_user=tweet.username,
+        #         from_user=request.username)
         serializer = CommentSerializer(
             new_comment, context={'request': request})
         return Response(serializer.data,status=HTTP_201_CREATED)
 
+
+# class SinglePostCommentViewSetc(viewsets.ViewSet):
+#     @api_view(['GET'])
+#     def list(self, request):
+#         print("running 3xx")
+#         if request.method == 'GET':
+#             # tweets = Tweet.objects.using('male_user_db').all()
+#             serializer = CommentSerializer(
+#                  many=True, context={'request': request})
+#             return Response(serializer.data)
+# single_post_comment_view = SinglePostCommentViewSetc.as_view({'get': 'list'})
 
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
@@ -283,6 +301,7 @@ def bookmark_tweet(request):
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
 def UserTweetList(request, username):
+    print("running 3")
     user = User.objects.get(username=username)
     if request.method == 'GET':
         tweets = Tweet.objects.filter(username=username).filter(
@@ -293,12 +312,15 @@ def UserTweetList(request, username):
             tweets = tweets | owner_private
         serializer = TweetSerializer(
             tweets, many=True, context={'request': request})
+        print(serializer.data)
         return Response(serializer.data)
 
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
 def bookmarkList(request):
+    print("running 3")
+
     bookmark_tweet = request.user.bookmark.all().order_by('-id')
     serializer = TweetSerializer(
         bookmark_tweet, many=True, context={'request': request})

@@ -7,6 +7,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls')),
     path('tweets/', include('tweets.urls')),
+    path('posts/', include('community.urls')),
+
     path('notify/', include('notifications.urls')),
     path('chats/', include('chat.urls')),
     path('community/', include('community.urls')),
