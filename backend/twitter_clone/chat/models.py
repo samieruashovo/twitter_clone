@@ -61,5 +61,6 @@ class Message(BaseModel):
     text = models.TextField(blank=False, null=False)
     objects = MessageManager()
 
+
     def __str__(self) -> str:
         return f'From <Room - {self.room}>'

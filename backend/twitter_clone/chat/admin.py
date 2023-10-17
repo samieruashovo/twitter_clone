@@ -5,7 +5,7 @@ from .models import PrivateChat,Message
 class MessageInline(admin.StackedInline):
     model = Message
     fields = ('sender', 'text')
-    readonly_fields = ('sender', 'text')
+    # readonly_fields = ('sender',)
 
 class PrivateChatAdmin(admin.ModelAdmin):
     model = PrivateChat

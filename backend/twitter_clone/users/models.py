@@ -58,6 +58,7 @@ class User(AbstractUser):
     class Meta:
         ordering = ['-date_joined']
         verbose_name_plural="Custom Users"
+        # using = 'male_user_db'
 
     def __str__(self):
         return f'{self.username}'

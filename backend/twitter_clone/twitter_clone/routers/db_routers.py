@@ -118,6 +118,11 @@ class TweetRouter:
                     # print('ssas6')
                     # print("gender: ")
                     return "female_user_db"
+        elif model._meta.app_label == "chat":
+            message_instance = hints.get("instance")
+            if message_instance:
+                print("message_instance "+message_instance.user1.username)
+                return "male_user_db"
         else:
             post_instance = hints.get("instance")
             if post_instance and hasattr(post_instance, "gender"):
@@ -134,6 +139,8 @@ class TweetRouter:
     def allow_relation(self, obj1, obj2, **hints):
         # Allow relations if both objects belong to the "tweets" app
         if obj1._meta.app_label == "tweets" and obj2._meta.app_label == "tweets":
+            return True
+        else:
             return True
         return None
 
