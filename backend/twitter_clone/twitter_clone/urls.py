@@ -15,7 +15,7 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/token/',  include('djoser.urls.jwt')),
     path("create/", views.TweetViewSet.as_view({'post': 'create_tweet'}), name="create-tweet"),
-
+    path('media/<str:image_filename>', views.serve_image, name='serve_image'),
 ] 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

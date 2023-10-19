@@ -15,6 +15,12 @@ from twitter_clone.pagination import CustomPagination
 from users.models import User
 from itertools import chain
 from django.shortcuts import render, redirect
+import os
+from django.http import FileResponse
+from django.conf import settings
+from django.shortcuts import render
+from django.http import HttpResponse
+import mimetypes
 
 class TweetViewSet(viewsets.ModelViewSet):
     queryset = Tweet.objects.all()
@@ -335,3 +341,19 @@ class SearchList(generics.ListAPIView):
     serializer_class = UserLessInfoSerializer
     filter_backends = [DjangoFilterBackend,filters.SearchFilter]
     search_fields = ('username','first_name','last_name')
+
+def serve_image(request, image_filename):
+    image_path = os.path.join(settings.MEDIA_ROOT, image_filename)
+
+    try:
+        # Open the file in binary read mode and keep it open until it's served.
+        image_file = open(image_path, 'rb')
+        response = FileResponse(image_file)
+        # Determine and set the content type based on the file extension.
+        content_type, encoding = mimetypes.guess_type(image_path)
+        response['Content-Type'] = content_type
+        return response
+    except FileNotFoundError:
+        return HttpResponse("Image not found", status=404)
+    except Exception as e:
+        return HttpResponse(f"Error serving the image: {str(e)}", status=500)
