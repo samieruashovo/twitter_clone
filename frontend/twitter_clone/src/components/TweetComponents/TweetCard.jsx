@@ -39,7 +39,7 @@ const TweetCard = () => {
             user={user}
             dispatch={dispatch}
             tweet={tweet}
-            key={tweet.id}
+            key={tweet.uuid}
           />
         ))
       )}

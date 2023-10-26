@@ -184,12 +184,21 @@ export const editTweet = (id, title, isChecked) => async (dispatch) => {
     dispatch(setMessage(`Something went Wrong !`));
   }
 };
-export const likeTweet = (id) => async (dispatch) => {
+// {
+//   "uuid": "fff4a097dba1472c9d0ed81e1d8a3b10",
+//   "username": "shovo"
+//   }
+  
+export const likeTweet = (uuid) => async (dispatch) => {
   try {
     const res = await axiosInstance.post(`tweets/love/like-unlike/`, {
-      pk: id,
+      uuid: uuid,
+      // username: username
+      
     });
-    dispatch(likeUnlikeTweet({ ...res.data, id: id }));
+    console.log(uuid +" xxx");
+
+    dispatch(likeUnlikeTweet({ ...res.data, uuid: uuid }));
   } catch (err) {
     console.log(err);
     dispatch(setMessage(`Something went Wrong !`));

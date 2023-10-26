@@ -37,7 +37,7 @@ const TweetDetail = () => {
   const [commentInput, setCommentInput] = useState("");
   const userIn = useSelector((state) => state.userReducer);
 
-  const { id } = useParams();
+  const { uuid } = useParams();
   const { user, isAuthenticated } = userIn;
 
   const message = useSelector((state) => state.tweetReducer.message);
@@ -45,11 +45,11 @@ const TweetDetail = () => {
   const meta = comments.meta;
 
   useEffect(() => {
-    dispatch(tweet_detail(id));
-    dispatch(tweet_comments(id));
-  }, [dispatch, id]);
-  const likeTweetD = (id) => {
-    dispatch(likeTweet(id));
+    dispatch(tweet_detail(uuid));
+    dispatch(tweet_comments(uuid));
+  }, [dispatch, uuid]);
+  const likeTweetD = (uuid) => {
+    dispatch(likeTweet(uuid));
   };
   message &&
     setTimeout(() => {
@@ -62,7 +62,7 @@ const TweetDetail = () => {
     setEditTitle(tweet.title);
   };
   const commentAdd = () => {
-    dispatch(addComment(id, commentInput));
+    dispatch(addComment(uuid, commentInput));
     setCommentInput("");
   };
   // http://127.0.0.1:8000/tweets/comments/18/?page=2
@@ -70,7 +70,7 @@ const TweetDetail = () => {
   const loadMoreComment = () => {
     console.log(meta?.page, meta?.next);
     if (meta.next !== null) {
-      dispatch(load_more_comment(id, meta.page + 1));
+      dispatch(load_more_comment(uuid, meta.page + 1));
     }
   };
   return (
@@ -95,7 +95,7 @@ const TweetDetail = () => {
                   <FiMoreHorizontal
                     data-toggle="dropdown"
                     className="dropdownIcon"
-                    id={`#${tweet.id}dropdown`}
+                    uuid={`#${tweet.uuid}dropdown`}
                     aria-haspopup="true"
                     aria-expanded="false"
                   />
@@ -149,7 +149,7 @@ const TweetDetail = () => {
             </div>
             <TweetOperation
               user={isAuthenticated ? user : ""}
-              id={parseInt(id)}
+              uuid={parseInt(uuid)}
               liked={tweet.iliked}
               likeTweetD={likeTweetD}
               like_count={tweet.like_count}

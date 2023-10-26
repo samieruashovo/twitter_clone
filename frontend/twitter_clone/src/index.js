@@ -7,6 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 import axios from "axios";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import Profile from "./pages/Profile";
 const baseURL = 'http://localhost:8000/'
 
 
@@ -38,6 +39,7 @@ axiosInstance.interceptors.request.use(
 
 ReactDOM.render(
   <Provider store={store}>
+    
     <App />
   </Provider>,
   document.getElementById("root")

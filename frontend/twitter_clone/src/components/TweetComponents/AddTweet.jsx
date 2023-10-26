@@ -51,8 +51,11 @@ const AddTweet = () => {
   };
 
   const submitTweet = async( event) => {
+
     const jsonData = localStorage.getItem("userData");
     const dataObject = JSON.parse(jsonData);
+    console.log(dataObject);
+
 
 // Step 3: Access the "username" property
 // const username = dataObject.data.username;

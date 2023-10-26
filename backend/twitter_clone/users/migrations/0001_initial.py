@@ -80,11 +80,13 @@ class Migration(migrations.Migration):
                 ("bio", models.TextField(blank=True, default="")),
                 (
                     "avatar",
-                    models.ImageField(default="default.jpg", upload_to="avatars"),
+                    models.ImageField(default="default.jpg",
+                                      upload_to="avatars"),
                 ),
                 (
                     "cover_image",
-                    models.ImageField(default="cover.jpg", upload_to="avatars"),
+                    models.ImageField(default="cover.jpg",
+                                      upload_to="avatars"),
                 ),
                 (
                     "following",

@@ -3,9 +3,10 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserManager
 
+
 class CustomUserManager(BaseUserManager):
 
-    def create_user(self, email,username, password, **extra_fields):
+    def create_user(self, email, username, password, **extra_fields):
         """
           Create and save a SuperUser with the given email,first name , lastname and password.
         """
@@ -17,12 +18,12 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_('Password must be set'))
 
         email = self.normalize_email(email)
-        user = self.model(email=email,username=username, **extra_fields)
+        user = self.model(email=email, username=username, **extra_fields)
         user.set_password(password)
         user.save()
         return user
 
-    def create_superuser(self, email,username, password, **extra_fields):
+    def create_superuser(self, email, username, password, **extra_fields):
         """
         Create and save a SuperUser with the given email,first name , lastname and password.
         """
@@ -34,33 +35,35 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_('Superuser must have is_staff=True.'))
         if extra_fields.get('is_superuser') is not True:
             raise ValueError(_('Superuser must have is_superuser=True.'))
-        return self.create_user(email,username, password, **extra_fields)
+        return self.create_user(email, username, password, **extra_fields)
+
 
 class User(AbstractUser):
-    username = models.CharField(max_length=200,unique=True)
-    first_name = models.CharField(max_length=200,blank=True, null=True)
-    last_name = models.CharField(max_length=200,blank=True, null=True)
+    username = models.CharField(max_length=200, unique=True)
+    first_name = models.CharField(max_length=200, blank=True, null=True)
+    last_name = models.CharField(max_length=200, blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
-    gender = models.CharField(max_length=200,blank=True, default='male')
+    gender = models.CharField(max_length=200, blank=True, default='male')
     email = models.CharField(max_length=200, unique=True)
     password = models.CharField(max_length=200)
-    followers = models.ManyToManyField("self",symmetrical=False,related_name="followedme" ,blank=True)
-    following = models.ManyToManyField("self",symmetrical=False,related_name="followed" ,blank=True)
-    bio = models.TextField(blank=True ,default="")
-    profile_pic = models.ImageField(default='default.jpg', upload_to='avatars')
+    followers = models.ManyToManyField(
+        "self", symmetrical=False, related_name="followedme", blank=True)
+    following = models.ManyToManyField(
+        "self", symmetrical=False, related_name="followed", blank=True)
+    bio = models.TextField(blank=True, default="")
+    profile_pic = models.ImageField(
+        default='avatars/default.jpg', upload_to='avatars')
     cover_pic = models.ImageField(default='cover.jpg', upload_to='avatars')
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
-    #requred for creating user
+    # requred for creating user
     REQUIRED_FIELDS = ['username',]
 
     class Meta:
         ordering = ['-date_joined']
-        verbose_name_plural="Custom Users"
+        verbose_name_plural = "Custom Users"
         # using = 'male_user_db'
 
     def __str__(self):
         return f'{self.username}'
-
-    

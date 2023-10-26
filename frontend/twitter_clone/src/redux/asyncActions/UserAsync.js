@@ -38,7 +38,7 @@ export const load_user = () => async (dispatch) => {
 
       // localStorage.setItem("username", res.data.username);
       // localStorage.setItem("gender",res.data.gender);
-      dispatch(getUserInfo('shovo'));
+      dispatch(getUserInfo(res.data.username));
 
       dispatch(userSuccess(res.data));
       // console.log("ksdjdj")

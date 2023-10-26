@@ -224,6 +224,7 @@ body {
 .tweetIcons {
   cursor: pointer;
   font-size: 22px;
+  margin-right: 10px; 
   /* color: rgb(168, 157, 157); */
   /* font-family: Arial, Helvetica, sans-serif; */
 }
@@ -419,6 +420,17 @@ body {
   position: relative;
 
 }
+.FollowInfo {
+  display: inline;
+  /* You can also add margin or padding if you need spacing between the components */
+  margin-right: 10px; /* Adjust the margin as needed */
+  margin-left: 10px;
+  display: flex;
+  /* Optional: To control the spacing between elements */
+  /* justify-content: space-between;  */
+  align-items: center;
+}
+
 .second-trend {
   display: flex;
   flex-direction: column; /* Items will be stacked vertically */

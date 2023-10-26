@@ -1,3 +1,7 @@
+from django.db import connections
+from django_filters.rest_framework import DjangoFilterBackend
+from users.serializers import UserLessInfoSerializer
+from rest_framework import filters
 from rest_framework import viewsets, exceptions
 from rest_framework.status import HTTP_201_CREATED
 from rest_framework.views import APIView
@@ -22,6 +26,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import mimetypes
 
+
 class TweetViewSet(viewsets.ModelViewSet):
     queryset = Tweet.objects.all()
     serializer_class = TweetSerializer
@@ -30,7 +35,7 @@ class TweetViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return list(chain(Tweet.objects.using('male_user_db').all(), Tweet.objects.using('female_user_db').all()))
-        
+
         # return Tweet.objects.using('female_user_db').all()
 
     def get_serializer_context(self):
@@ -38,35 +43,34 @@ class TweetViewSet(viewsets.ModelViewSet):
         context["request"] = self.request
         print('context: ')
         return context
-    
+
     def create_tweet(self, request):
         if request.method == 'POST':
-           
-           form = TweetForm(request.data)
-           print('x')
+
+            form = TweetForm(request.data)
+            print('x')
         #    print(form)
-           if form.is_valid():
-               print('y')
-               tweet = form.save(commit=False)
-               print(tweet)
-               tweet.username = request.user.username  # Set username based on the authenticated user
-               tweet.save()
-               return Response({'message': 'Tweet created successfully'}, status=201) # Redirect to a success page or another view
+            if form.is_valid():
+                print('y')
+                tweet = form.save(commit=False)
+                print(tweet)
+                # Set username based on the authenticated user
+                tweet.username = request.user.username
+                tweet.save()
+                # Redirect to a success page or another view
+                return Response({'message': 'Tweet created successfully'}, status=201)
         return Response({'errors': form.errors}, status=400)
 
-    
-    
     # def perform_create(self, serializer):
     #     print("view_set: ")
     #     print(self.request.user.gender)
     #     print(serializer)
     #     try:
     #        serializer.save(username=self.request.user.username)
-        
+
     #     except Exception as e:
     #         print("Error creating Tweet instance:", e)
 # @api_view(['POST'])
-
 
         # if self.request.user.gender =='male':
         #     print("gender platform_create male")
@@ -77,10 +81,6 @@ class TweetViewSet(viewsets.ModelViewSet):
         # else:
         #     print("gender platform_create default")
         #     serializer.save(username=self.request.user.username)
-
-        
-
-
 
 
 # class FemaleTweetViewSet(viewsets.ModelViewSet):
@@ -106,7 +106,6 @@ class ExploreTweetViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TweetSerializer
     pagination_class = CustomPagination
 
-
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context["request"] = self.request
@@ -126,7 +125,8 @@ def ReTweetView(request):
     if tweet.username == request.username:
         raise exceptions.APIException("Can't Retweet your own post")
     # try:
-    parent_tweet = Tweet.objects.using('default').filter(parent=tweet, username=request.username)
+    parent_tweet = Tweet.objects.using('default').filter(
+        parent=tweet, username=request.username)
     if parent_tweet.exists():
         raise exceptions.APIException("Already retweeted !")
     else:
@@ -135,12 +135,12 @@ def ReTweetView(request):
             parent=tweet
         )
         Notification.objects.using('default').get_or_create(
-                notification_type='RT',
-                tweet=tweet,
-                to_user=tweet.username,
-                from_user=request.user)
-        serializer =  TweetSerializer(re_tweet,context={"request":request})
-        return Response(serializer.data,status=HTTP_201_CREATED)
+            notification_type='RT',
+            tweet=tweet,
+            to_user=tweet.username,
+            from_user=request.user)
+        serializer = TweetSerializer(re_tweet, context={"request": request})
+        return Response(serializer.data, status=HTTP_201_CREATED)
 
 
 class ComentView(APIView):
@@ -150,35 +150,34 @@ class ComentView(APIView):
     # def get_object(self,pk):
     #     tweet = Tweet.objects.get(id=pk)
     #     return tweet
-    
 
-    def get(self, request,pk):
+    def get(self, request, pk):
         print("running2")
         print(request.data)
         print(pk)
         # tweet = self.get_object(pk)
         # comments = Comment.objects.using('male_user_db').all()
         # return list(chain(Tweet.objects.using('male_user_db').all(), Tweet.objects.using('female_user_db').all()))
-        
+
         comments = list(chain(Comment.objects.using('male_user_db').filter(
             tweet_uuid=pk).order_by('-created'), Comment.objects.using('female_user_db').filter(
             tweet_uuid=pk).order_by('-created')))
         paginator = CustomPagination()
-        result_page = paginator.paginate_queryset(comments,request)
+        result_page = paginator.paginate_queryset(comments, request)
         serializer = CommentSerializer(
             result_page, many=True, context={'request': request})
         print(serializer.data)
         # return Response(serializer.data)
         return paginator.get_paginated_response(serializer.data)
 
-    def post(self,request,pk):
+    def post(self, request, pk):
         data = request.data
         print(data)
         # tweet = self.get_object(pk)
         if len(data.get('body')) < 1:
             raise exceptions.APIException('Cannot be blank')
         new_comment = Comment(body=data.get(
-            'body'), username=data.get('username'),gender=data.get('gender'), tweet_uuid=data.get('tweet_uuid'))
+            'body'), username=data.get('username'), gender=data.get('gender'), tweet_uuid=data.get('tweet_uuid'))
         new_comment.save()
         # if request.username != tweet.username:
         #     Notification.objects.get_or_create(
@@ -188,7 +187,7 @@ class ComentView(APIView):
         #         from_user=request.username)
         serializer = CommentSerializer(
             new_comment, context={'request': request})
-        return Response(serializer.data,status=HTTP_201_CREATED)
+        return Response(serializer.data, status=HTTP_201_CREATED)
 
 
 # class SinglePostCommentViewSetc(viewsets.ViewSet):
@@ -222,43 +221,89 @@ def ComentReplyView(request, pk):
             'body'), username=request.username, post=tweet)
         new_comment.save()
         if request.username != parent.username:
-              Notification.objects.get_or_create(
-                    notification_type='R',
-                    comment=parent,
-                    to_user=parent.username,
-                    tweet=tweet,
-                    from_user=request.username)
-        
+            Notification.objects.get_or_create(
+                notification_type='R',
+                comment=parent,
+                to_user=parent.username,
+                tweet=tweet,
+                from_user=request.username)
+
         serializer = CommentSerializer(
             new_comment, context={'request': request})
-        return Response(serializer.data,status=HTTP_201_CREATED)
+        return Response(serializer.data, status=HTTP_201_CREATED)
 
+# {
+# "uuid": "fff4a097dba1472c9d0ed81e1d8a3b10",
+# "username": "shovo"
+# }
 
 
 @api_view(['POST'])
-@permission_classes((IsAuthenticated,))
+# @permission_classes((IsAuthenticated,))
 def like_unlike_tweet(request):
     if request.method == "POST":
-        pk = request.data.get("pk")
-        tweet = get_object_or_404(Tweet, id=pk)
+        print("xxxx")
+        # print(request.data)
+        pk = request.data.get("uuid")
+        usrname = request.data.get('username')
+        # print(pk + usrname)
+        # tweet = list(chain(Tweet.objects.using('male_user_db').all(),
+        #              Tweet.objects.using('female_user_db').all()))
+        # print(tweet)
+        # # Replace 'db1' with the actual database alias.
+        # tweet_db1 = Tweet.objects.using('male_user_db').get(Tweet.objects.using("female_user_db"), uuid=pk)
 
-        if request.user in tweet.liked.all():
-            liked = False
-            tweet.liked.remove(request.username)
+        # # Connect to the second database
+        # # Replace 'db2' with the actual database alias.
+        # tweet_db2 = Tweet.objects.using('female_user_db').get(Tweet, uuid=pk)
+        # print(tweet_db1)
+        # print(tweet_db2)
+
+        # print(get_object_or_404(Tweet.objects.using(
+        #     "female_user_db"), uuid=pk) + "xxxx")
+        try:
+            tweet = get_object_or_404(Tweet.objects.using(
+                "female_user_db"), uuid=pk)
+        except:
+            tweet = get_object_or_404(Tweet.objects.using(
+                "male_user_db"), uuid=pk)
+        print(tweet)
+
+        # print(tweet + "skjd")
+
+        # print(tweet.liked.split(','))
+
+        if usrname not in tweet.liked.split(','):
+            tweet.liked += f',{usrname}'
+            print(tweet.liked)
+            tweet.save()
         else:
-            liked = True
-            tweet.liked.add(request.username)
-            if request.username != tweet.username:
-              Notification.objects.get_or_create(
-                    notification_type='L',
-                    tweet=tweet,
-                    to_user=tweet.username,
-                    from_user=request.username)
+            liked_list = tweet.liked.split(',')
+            liked_list.remove(usrname)
+            tweet.liked = ','.join(liked_list)
+            print(tweet.liked)
+            tweet.save()
+
+        # if request.user in tweet.liked.all():
+        #     liked = False
+        #     tweet.liked.remove(request.username)
+        # else:
+        #     liked = True
+        #     tweet.liked.add(request.username)
+        #     if request.username != tweet.username:
+        #         Notification.objects.get_or_create(
+        #             notification_type='L',
+        #             tweet=tweet,
+        #             to_user=tweet.username,
+        #             from_user=request.username)
         return Response({
-            'liked': liked,
+            'liked': tweet.liked,
             'count': tweet.like_count
         })
-
+# def add_like(self, username):
+#         if username not in self.liked.split(','):
+#             self.liked += f',{username}'
+#             self.save()
 
 
 @api_view(['POST'])
@@ -274,7 +319,7 @@ def like_unlike_comment(request):
             liked = True
             comment.liked.add(request.user)
             if request.user != comment.author:
-              Notification.objects.get_or_create(
+                Notification.objects.get_or_create(
                     notification_type='LR',
                     comment=comment,
                     to_user=comment.author,
@@ -283,7 +328,6 @@ def like_unlike_comment(request):
             'liked': liked,
             'count': comment.like_comment
         })
-
 
 
 @api_view(['POST'])
@@ -301,7 +345,6 @@ def bookmark_tweet(request):
         return Response({
             'bookmarked': bookmarked,
         })
-
 
 
 @api_view(['GET'])
@@ -332,15 +375,13 @@ def bookmarkList(request):
         bookmark_tweet, many=True, context={'request': request})
     return Response(serializer.data)
 
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
-from users.serializers import UserLessInfoSerializer
 
 class SearchList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserLessInfoSerializer
-    filter_backends = [DjangoFilterBackend,filters.SearchFilter]
-    search_fields = ('username','first_name','last_name')
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ('username', 'first_name', 'last_name')
+
 
 def serve_image(request, image_filename):
     image_path = os.path.join(settings.MEDIA_ROOT, image_filename)

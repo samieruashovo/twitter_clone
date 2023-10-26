@@ -9,8 +9,8 @@ import { BiGlobe } from "react-icons/bi";
 import { FaLock } from "react-icons/fa";
 
 const TweetPostCard = ({ tweet, dispatch, user }) => {
-  const likeTweetD = (id) => {
-    dispatch(likeTweet(id));
+  const likeTweetD = (uuid) => {
+    dispatch(likeTweet(uuid));
   };
   return (
     <div className="tweetCard">
@@ -19,7 +19,7 @@ const TweetPostCard = ({ tweet, dispatch, user }) => {
           <FiMoreHorizontal
             data-toggle="dropdown"
             className="dropdownIcon"
-            id={`#${tweet.id}dropdown`}
+            uuid={`#${tweet.uuid}dropdown`}
             aria-haspopup="true"
             aria-expanded="false"
           />
@@ -59,8 +59,8 @@ const TweetPostCard = ({ tweet, dispatch, user }) => {
             like_count={tweet.myparent.like_count}
             tweet={tweet.myparent}
             bookmark={tweet.myparent.i_bookmarked}
-            id={tweet.myparent.id}
-            oriId={tweet.id}
+            uuid={tweet.myparent.uuid}
+            oriId={tweet.uuid}
             retweet={tweet?.username === user?.username ? true : false}
           />
         </>

@@ -15,7 +15,7 @@ import AddPicker from "./SmallComponent/AddPicker";
 export const TweetOperation = ({
   // bookmark,
   liked,
-  id,
+  uuid,
   oriId = null,
   retweet = false,
   likeTweetD,
@@ -64,7 +64,7 @@ export const TweetOperation = ({
           data-toggle="tooltip"
           title="Add Reply"
           className="tweetIcons d-flex justify-content-center align-items-center"
-          onClick={() => setId(id)}
+          onClick={() => setId(uuid)}
         >
           <AiOutlineComment data-toggle="modal" data-target="#what" />
 
@@ -147,7 +147,7 @@ export const TweetOperation = ({
           </i>
         ) : (
           <i data-toggle="tooltip" title="Re-Tweet" className="tweetIcons">
-            <AiOutlineRetweet onClick={() => sendReTweet(id)} />
+            <AiOutlineRetweet onClick={() => sendReTweet(uuid)} />
           </i>
         )}
         <i className="tweetIcons heart-parent">
@@ -155,7 +155,7 @@ export const TweetOperation = ({
             isclicked={isclicked ? 1 : 0}
             onClick={() => {
               setClick(!isclicked);
-              comid ? likeTweetD(comid) : likeTweetD(id);
+              comid ? likeTweetD(comid) : likeTweetD(uuid);
             }}
           />
           {oriId ? "" : <span className="count">{like_count}</span>}
