@@ -24,14 +24,13 @@ export const TweetContent = ({
     <div className="tweet-content">
       <div>
         <span style={{ display: "flex", alignItems: "center" }}>
-          {tweet.username}
+         
 
           <span className="mx-2 side-name">
             @ {tweet.username} |
-            {/* {Moment(tweet.created ).format('MMM Do YY')} */}
+           
             <span className="mx-1">{Moment(tweet.created).fromNow(true)}</span>
             {tweet.is_private ? <FaLock /> : <BiGlobe />}
-            {tweet.isEdited && <span className="mx-2">- Edited</span>}
           </span>
         </span>
       </div>
@@ -75,14 +74,20 @@ export const TweetContent = ({
             </button>
           </>
         ) : (
-          tweet.title
+          <p>
+          {tweet.title }
+          <br/>
+          <br/>
+
+         {tweet.body}
+         </p>
         )}
       </p>
-      {tweet.image && (
+      {tweet.profile_pic && (
         <img
           onClick={() => setVisible(true)}
           alt="img"
-          src={tweet.image}
+          src={tweet.profile_pic}
           className="image"
         />
       )}
@@ -91,7 +96,7 @@ export const TweetContent = ({
         onClose={() => {
           setVisible(false);
         }}
-        images={[{ src: tweet.image, alt: "img" }]}
+        images={[{ src: tweet.profile_pic, alt: "img" }]}
       />
     </div>
   );

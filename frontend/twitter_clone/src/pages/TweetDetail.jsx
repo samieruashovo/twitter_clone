@@ -25,7 +25,13 @@ import {
 } from "../redux/asyncActions/CommentAsync";
 import ClipLoader from "react-spinners/ClipLoader";
 import AddPicker from "../components/SmallComponent/AddPicker";
+import { BiGlobe } from "react-icons/bi";
+import { FaLock } from "react-icons/fa";
+import Moment from "moment";
 
+import { axiosInstance } from "../index";
+import axios from "axios";
+const url = "http://localhost:8000/";
 const TweetDetail = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -34,17 +40,25 @@ const TweetDetail = () => {
   const history = useNavigate();
   const [editTitle, setEditTitle] = useState("");
   const tweet = useSelector((state) => state.tweetReducer.singleTweet);
+  console.log(tweet)
+  // if(tweet !== undefined){
+  //   console.log(tweet.data[0].uuid);
+  // }
+  console.log("tweetksjdfh")
   const [commentInput, setCommentInput] = useState("");
   const userIn = useSelector((state) => state.userReducer);
 
   const { uuid } = useParams();
   const { user, isAuthenticated } = userIn;
 
+
   const message = useSelector((state) => state.tweetReducer.message);
   const comments = useSelector((state) => state.commentReducer);
   const meta = comments.meta;
 
   useEffect(() => {
+    console.log('running')
+   
     dispatch(tweet_detail(uuid));
     dispatch(tweet_comments(uuid));
   }, [dispatch, uuid]);
@@ -73,19 +87,34 @@ const TweetDetail = () => {
       dispatch(load_more_comment(uuid, meta.page + 1));
     }
   };
+
+  // const loadTweet= () => async () => {
+  //   try {
+  //     if (localStorage.getItem("access")) {
+  //       const res = await axiosInstance.get(`${url}tweets/tweet-detail/${uuid}`);
+  //       console.log(res.data)
+  //       console.log("kkkjjjjhhh")
+  //     }
+  //     await axios.get(`${url}tweets/tweet-detail/${uuid}`);
+  //   } catch (err) {
+  //     console.log(err+"asdf");
+  //   }
+  // }
+  if (!tweet.data || tweet.data.length === 0) {
+    return (
+      <div>
+        Loading... 
+      </div>
+    );
+  }
+
+  const title = tweet.data[0].title;
+
   return (
     <div>
-      {/* <Sidebar /> */}
-      {/* alert message during tweet operations */}
-      {message && (
-        <AlertMessage
-          removeMesage={removeMesage}
-          dispatch={dispatch}
-          message={message}
-        />
-      )}
-      {/* tweet card */}
-      {tweet.author && (
+  
+      
+  {tweet.data[0].username && (
         <Second>
           <TweetHeader headerName="Detail" />
           <div className="tweetCard">
@@ -95,13 +124,13 @@ const TweetDetail = () => {
                   <FiMoreHorizontal
                     data-toggle="dropdown"
                     className="dropdownIcon"
-                    uuid={`#${tweet.uuid}dropdown`}
+                    uuid={`#${tweet.data[0].uuid}dropdown`}
                     aria-haspopup="true"
                     aria-expanded="false"
                   />
-
+{/* 
                   <div className="dropdown-menu dropdown-menu-right dropdownMenu">
-                    {user?.email === tweet?.author.email ? (
+                    {user?.email === tweet.data[0].email ? (
                       <>
                         <p onClick={editpost}>
                           <BiEditAlt />
@@ -109,7 +138,7 @@ const TweetDetail = () => {
                         </p>
                         <p
                           onClick={() => {
-                            dispatch(deleteTweet(tweet.id));
+                            dispatch(deleteTweet(tweet.data[0].uuid));
                             history("/");
                           }}
                         >
@@ -122,28 +151,27 @@ const TweetDetail = () => {
                         <BiBlock color="#e0245e" /> <span>Not your's Boi</span>
                       </p>
                     )}
-                  </div>
+                  </div> */}
                 </span>
               )}
               <span className="add-tweet-image">
-                <Link to={`/${tweet.username}`}>
+                <Link to={`/${tweet.data[0].username}`}>
                   <img
                     alt="img"
-                    src={tweet.profile_pic}
+                    src={tweet.data[0].profile_pic}
                     className="rounded-circle author-image"
                     width="60px"
                     height="60px"
                   />
                 </Link>
               </span>
-              {/* Tweet content component which shows tweet info - title,images,viewer */}
               <TweetContent
-                tweet={tweet}
+                tweet={tweet.data[0]}
                 editTitle={editTitle}
                 setEditTitle={setEditTitle}
                 edit={edit}
                 setEdit={setEdit}
-                id={tweet.id}
+                id={tweet.data[0].uuid}
                 dispatch={dispatch}
               />
             </div>
@@ -158,7 +186,6 @@ const TweetDetail = () => {
               bookmark={tweet.i_bookmarked}
             />
           </div>
-          {/* comment lists */}
           <section className="comment-list">
             {isAuthenticated && (
               <div className="commentDiv">
@@ -177,7 +204,6 @@ const TweetDetail = () => {
                   placeholder="Tweet your Reply"
                 ></textarea>
 
-                <AddPicker setInput={setCommentInput} />
                 <button
                   disabled={!commentInput}
                   onClick={commentAdd}
@@ -198,7 +224,7 @@ const TweetDetail = () => {
             ) : (
               comments?.commentList.map((comment) => (
                 <CommentCard
-                  tweetId={tweet.id}
+                  tweetId={tweet.uuid}
                   user={isAuthenticated ? user : ""}
                   key={comment.id}
                   comment={comment}
@@ -217,6 +243,8 @@ const TweetDetail = () => {
       )}
     </div>
   );
-};
-
+  }
 export default TweetDetail;
+
+
+

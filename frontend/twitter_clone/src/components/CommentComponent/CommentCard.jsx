@@ -36,34 +36,20 @@ const CommentCard = ({ tweetId, user, comment }) => {
           aria-haspopup="true"
           aria-expanded="false"
         />
-
-        <div className="dropdown-menu dropdown-menu-right dropdownMenu">
-          <DropdownContent
-            setEdit={setEdit}
-            dispatch={dispatch}
-            user={user}
-            setCurIndex={setCurIndex}
-            comment={comment}
-          />
-        </div>
       </span>
 
       <div key={comment.id} className="comment-innerDiv">
-        <Link to={`/${comment.author.username}`}>
-          <img
-            src={`${comment.author.profile_pic}`}
-            alt="comment-author"
-            className="authorImage"
-          />
+        <Link to={`/${comment.username}`}>
         </Link>
 
         <div>
           <div className="comment-info">
-            {comment.author.username}
-            <span className="mx-2 side-name">
-              {Moment(comment.created).fromNow(true)}
-              {comment.isEdited && "- Edited"}
-            </span>
+            <span style={{ display: "flex", alignItems: "center" }}>
+          <span className="mx-2 side-name">
+            @ {comment.username} |
+            <span className="mx-1">{Moment(comment.created).fromNow(true)}</span>
+          </span>
+        </span>
           </div>
 
           <EditPost
@@ -86,38 +72,6 @@ const CommentCard = ({ tweetId, user, comment }) => {
         like_count={comment.like_count}
         NoRetweetMark={true} //don't show retwet or bookmark for comment
       />
-      {comment.children.length > 0 && (
-        <strong
-          onClick={() => setShowReply(!showReply)}
-          className="d-flex justify-content-center align-items-center my-2 showHideReply"
-        >
-          {showReply ? (
-            <span className="showed">
-              Hide Replies ({comment.children.length})
-              <BiCaretUp className="mx-2" size={24} />
-            </span>
-          ) : (
-            <>
-              Show Replies ({comment.children.length})
-              <BiCaretDown className="mx-2" size={24} />
-            </>
-          )}
-        </strong>
-      )}
-      {showReply &&
-        comment.children &&
-        comment.children.map((childcom) => (
-          <ReplyComment
-            tweetId={tweetId}
-            key={childcom.id}
-            childCom={childcom}
-            parentCom={comment}
-            user={user}
-            setEdit={setEdit}
-            setCurIndex={setCurIndex}
-          />
-          // <CommentCard tweetId={tweetId} user={user} comment={comment}/>
-        ))}
     </div>
   );
 };

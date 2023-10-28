@@ -68,17 +68,19 @@ export const load_more = (pageLink) => async (dispatch) => {
   }
 };
 
-export const tweet_detail = (id) => async (dispatch) => {
+export const tweet_detail = (uuid) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
     if (localStorage.getItem("access")) {
-      const res = await axiosInstance.get(`${url}tweets/explore/global/${id}/`);
+      const res = await axiosInstance.get(`${url}tweets/tweet-detail/${uuid}`);
       dispatch(setLoading(false));
+      console.log(res.data)
+      console.log("asdfdsfd")
       dispatch(tweetDetail(res.data));
     }
-    await axios.get(`${url}tweets/explore/global/${id}/`);
+    await axios.get(`${url}tweets/tweet-detail/${uuid}`);
   } catch (err) {
-    console.log(err);
+    console.log(err+"asdf");
   }
 };
 
@@ -191,9 +193,13 @@ export const editTweet = (id, title, isChecked) => async (dispatch) => {
   
 export const likeTweet = (uuid) => async (dispatch) => {
   try {
+    const jsonData = localStorage.getItem("userData");
+    const dataObject = JSON.parse(jsonData);
+    console.log(dataObject);
     const res = await axiosInstance.post(`tweets/love/like-unlike/`, {
       uuid: uuid,
-      // username: username
+       username: dataObject.data.username
+    
       
     });
     console.log(uuid +" xxx");

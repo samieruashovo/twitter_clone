@@ -13,8 +13,9 @@ router.register(r"explore/global", views.ExploreTweetViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("post/retweet/", views.ReTweetView , name="retweet-view"),
+    path("post/retweet/", views.ReTweetView, name="retweet-view"),
     path("comments/list/<str:pk>", views.ComentView.as_view()),
+    path("tweet-detail/<str:uuid>", views.TweetDetailsView.as_view()),
     path(
         "comment_detail/<int:pk>/",
         views.CommentDetail.as_view(),
@@ -30,5 +31,5 @@ urlpatterns = [
     path("love/bookmark/", views.bookmark_tweet, name="bookmark"),
     path("love/bookmarkList/", views.bookmarkList, name="bookmark-list"),
     path("search/custom/", views.SearchList.as_view()),
-    path("specific/<username>/", views.UserTweetList,name="user-tweet"),
+    path("specific/<username>/", views.UserTweetList, name="user-tweet"),
 ]

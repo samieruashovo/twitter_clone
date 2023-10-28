@@ -41,7 +41,7 @@ export const EditPost = ({
           </div>
         </>
       ) : (
-        <p className="mx-4 mt-2">{comment.body}</p>
+        <p className="mx-4 mt-2 comment-body">{comment.body}</p>
       )}
     </>
   );

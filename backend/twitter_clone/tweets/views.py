@@ -144,21 +144,10 @@ def ReTweetView(request):
 
 
 class ComentView(APIView):
-    print("running")
-    # permission_classes= [IsAuthenticated]
-
-    # def get_object(self,pk):
-    #     tweet = Tweet.objects.get(id=pk)
-    #     return tweet
-
     def get(self, request, pk):
         print("running2")
         print(request.data)
         print(pk)
-        # tweet = self.get_object(pk)
-        # comments = Comment.objects.using('male_user_db').all()
-        # return list(chain(Tweet.objects.using('male_user_db').all(), Tweet.objects.using('female_user_db').all()))
-
         comments = list(chain(Comment.objects.using('male_user_db').filter(
             tweet_uuid=pk).order_by('-created'), Comment.objects.using('female_user_db').filter(
             tweet_uuid=pk).order_by('-created')))
@@ -188,6 +177,23 @@ class ComentView(APIView):
         serializer = CommentSerializer(
             new_comment, context={'request': request})
         return Response(serializer.data, status=HTTP_201_CREATED)
+
+
+class TweetDetailsView(APIView):
+    def get(self, request, uuid):
+        print("running22")
+        print(request.data)
+        print(uuid)
+        comments = list(chain(Tweet.objects.using('male_user_db').filter(
+            uuid=uuid).order_by('-created'), Tweet.objects.using('female_user_db').filter(
+            uuid=uuid).order_by('-created')))
+        paginator = CustomPagination()
+        result_page = paginator.paginate_queryset(comments, request)
+        serializer = TweetSerializer(
+            result_page, many=True, context={'request': request})
+        print(serializer.data)
+        # return Response(serializer.data)
+        return paginator.get_paginated_response(serializer.data)
 
 
 # class SinglePostCommentViewSetc(viewsets.ViewSet):

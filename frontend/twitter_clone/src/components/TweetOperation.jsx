@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { AiOutlineComment, AiOutlineRetweet } from "react-icons/ai";
+import { AiOutlineComment, AiOutlineRetweet, AiOutlineLike } from "react-icons/ai";
 import { FiShare } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import Heart from "../GooberStyled/TwitterHeart";
+// import Heart from "react-heart"
 import {
   bookmarkTweet,
   deleteTweet,
@@ -11,11 +12,12 @@ import {
 } from "../redux/asyncActions/TweetAsync";
 import { addComment } from "../redux/asyncActions/CommentAsync";
 import AddPicker from "./SmallComponent/AddPicker";
+import { colors } from "@material-ui/core";
 
 export const TweetOperation = ({
   // bookmark,
   liked,
-  uuid,
+  id,
   oriId = null,
   retweet = false,
   likeTweetD,
@@ -64,7 +66,7 @@ export const TweetOperation = ({
           data-toggle="tooltip"
           title="Add Reply"
           className="tweetIcons d-flex justify-content-center align-items-center"
-          onClick={() => setId(uuid)}
+          onClick={() => setId(id)}
         >
           <AiOutlineComment data-toggle="modal" data-target="#what" />
 
@@ -145,19 +147,24 @@ export const TweetOperation = ({
               onClick={() => dispatch(deleteTweet(oriId, true))}
             />
           </i>
-        ) : (
-          <i data-toggle="tooltip" title="Re-Tweet" className="tweetIcons">
-            <AiOutlineRetweet onClick={() => sendReTweet(uuid)} />
-          </i>
-        )}
+        ) : <div></div>
+        // (
+        //   <i data-toggle="tooltip" title="Re- Tweet" className="tweetIcons">
+        //     <AiOutlineRetweet onClick={() => sendReTweet(id)} />
+        //   </i>
+        // )
+        }
         <i className="tweetIcons heart-parent">
-          <Heart
+      
+          <AiOutlineLike
             isclicked={isclicked ? 1 : 0}
             onClick={() => {
               setClick(!isclicked);
-              comid ? likeTweetD(comid) : likeTweetD(uuid);
+              likeTweetD(id);
             }}
+            style={{ color: liked? 'red': "" }}
           />
+     
           {oriId ? "" : <span className="count">{like_count}</span>}
           {/* <span className="count">{like_count}</span> */}
         </i>

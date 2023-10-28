@@ -11,16 +11,16 @@ export const DropdownContent = ({
 }) => {
   return (
     <>
-      {user?.email !== comment?.author.email && (
+      {/* {user?.email !== comment?.author.email && (
         <>
           <p>
             <BiBlock color="#e0245e" /> <span>Not your comment boi</span>
           </p>
         </>
-      )}
-      {user?.email === comment?.author.email && (
+      )} */}
+      {(
         <>
-          <p
+          {/* <p
             onClick={() => {
               setEdit(true);
               setCurIndex(null);
@@ -28,8 +28,8 @@ export const DropdownContent = ({
           >
             <BiEditAlt />
             <span>Edit reply</span>
-          </p>
-          <p
+          </p> */}
+          {/* <p
             onClick={() => {
               dispatch(delComment(comment.id));
               setCurIndex(null);
@@ -37,7 +37,7 @@ export const DropdownContent = ({
           >
             <AiOutlineDelete color="#e0245e" />
             <span style={{ color: "#e0245e" }}>Delete Reply</span>
-          </p>
+          </p> */}
         </>
       )}
     </>

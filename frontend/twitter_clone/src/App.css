@@ -72,12 +72,13 @@ body {
 .mains {
   display: flex;
 }
-.heart-parent {
+/* .heart-parent {
   position: relative;
   transform: scale(0.66);
   margin-top: -40px;
   margin-bottom: -35px;
-}
+
+} */
 .count {
   position: absolute;
   top: 35px;
@@ -412,14 +413,24 @@ body {
   width: 480px;
 }
 .side-name {
-  color: rgb(157, 172, 192);
+  color: rgb(234, 237, 241);
   display: flex;
   padding: 10px;
+  margin-left: -15px;
   font-size: 14px;
   /* align-items: end; */
   position: relative;
 
 }
+.divider {
+  /* border-top: 1px solid #000;  */
+  margin-top: 8px; /* Add spacing above the divider */
+  margin-bottom: 10px; /* Add spacing below the divider */
+  /* position: relative; */
+  width: 100%;
+
+}
+
 .FollowInfo {
   display: inline;
   /* You can also add margin or padding if you need spacing between the components */

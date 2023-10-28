@@ -102,9 +102,9 @@ function App() {
         <Route path="user/:username" element={<Profile />} />
 
         {/* <Route path="/:username" exact component={Profile} /> */}
-        <Route path="/:username/tweet/:id" element={<TweetDetail />} />
+        {/* <Route path="/:username/tweet/:id" element={<TweetDetail />} /> */}
 
-        {/* <Route path="/:username/tweet/:id" component={TweetDetail} /> */}
+        <Route path="/:username/tweet/:uuid" element={<TweetDetail />} />
         <Route path="" element={<NotFound />} />
 
         <Route path="" component={NotFound} />

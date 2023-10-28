@@ -15,16 +15,16 @@ import { setMessage } from "../slices/tweetSlice";
 import axios from "axios";
 const url = "http://localhost:8000/";
 
-export const tweet_comments = (id) => async (dispatch) => {
+export const tweet_comments = (uuid) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
     if (localStorage.getItem("access")) {
-      const res = await axiosInstance.get(`${url}tweets/comments/${id}/`);
+      const res = await axiosInstance.get(`${url}tweets/comments/list/${uuid}`);
       dispatch(setLoading(false));
       dispatch(setMeta(res.data.meta));
       dispatch(commentSuccess(res.data.data));
     } else {
-      await axios.get(`${url}tweets/comments/${id}/`);
+      await axios.get(`${url}tweets/comments/${uuid}/`);
     }
   } catch (err) {}
 };
@@ -39,28 +39,34 @@ export const load_more_comment = (id, nextPage) => async (dispatch) => {
 };
 
 export const addComment =
-  (id, body, comid, reply = false) =>
+  (uuid, body, comid, reply = false) =>
   async (dispatch) => {
     dispatch(commentUploading(true));
     try {
-      if (reply) {
-        const res = await axiosInstance.post(`tweets/comments/reply/${id}/`, {
-          body,
-          comId: comid,
-        });
-        dispatch(commentUploading(false));
-        dispatch(replyAdded(res.data));
+      // if (reply) {
+      //   const res = await axiosInstance.post(`tweets/comments/reply/${id}/`, {
+      //     body,
+      //     comId: comid,
+      //   });
+      //   dispatch(commentUploading(false));
+      //   dispatch(replyAdded(res.data));
 
-        dispatch(setMessage("Reply Added !"));
-      } else {
-        const res = await axiosInstance.post(`tweets/comments/${id}/`, {
+      //   dispatch(setMessage("Reply Added !"));
+      // } else {
+        const jsonData = localStorage.getItem("userData");
+    const dataObject = JSON.parse(jsonData);
+    console.log("gender"+dataObject.data.gender)
+        const res = await axiosInstance.post(`tweets/comments/list/${uuid}`, {
           body,
+          gender: dataObject.data.gender,
+          username: dataObject.data.username,
+          tweet_uuid: uuid
         });
         dispatch(commentUploading(false));
         dispatch(commentAdded(res.data));
 
-        dispatch(setMessage("Reply Added !"));
-      }
+        dispatch(setMessage("Comment Added !"));
+      // }
     } catch (err) {
       dispatch(commentUploading(false));
       // dispatch(setMessage("Something went Wrong !"));

@@ -43,15 +43,15 @@ const ReplyComment = ({ childCom, parentCom, tweetId, user, setCurIndex }) => {
           />
         </div>
 
-        <Link to={`/${childCom.author.username}`}>
+        {/* <Link to={`/${childCom.author.username}`}>
           <img
             src={`${childCom.author.profile_pic}`}
             alt="comment-author"
             className="authorImage"
           />
-        </Link>
+        </Link> */}
         <div>
-          <div className="mx-3 d-flex justify-content-center align-items-center">
+          {/* <div className="mx-3 d-flex justify-content-center align-items-center">
             <strong>
               <Link to={`/${childCom.author.username}`}>
                 {childCom?.author.username}
@@ -64,7 +64,7 @@ const ReplyComment = ({ childCom, parentCom, tweetId, user, setCurIndex }) => {
             <span className="mx-2 side-name">
               - {Moment(childCom.created).fromNow(true)}
             </span>
-          </div>
+          </div> */}
 
           <EditPost
             edit={edit}
@@ -86,7 +86,7 @@ const ReplyComment = ({ childCom, parentCom, tweetId, user, setCurIndex }) => {
         like_count={childCom.like_count}
         NoRetweetMark={true} //don't show retwet or bookmark for comment
       />
-      {childCom.children.length > 0 && (
+      {/* {childCom.children.length > 0 && (
         <strong
           onClick={() => setShowReply(!showReply)}
           className="d-flex justify-content-center align-items-center my-2 showHideReply"
@@ -103,7 +103,7 @@ const ReplyComment = ({ childCom, parentCom, tweetId, user, setCurIndex }) => {
             </>
           )}
         </strong>
-      )}
+      )} */}
 
       {showReply &&
         childCom.children &&

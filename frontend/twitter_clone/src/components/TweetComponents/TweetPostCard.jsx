@@ -9,9 +9,13 @@ import { BiGlobe } from "react-icons/bi";
 import { FaLock } from "react-icons/fa";
 
 const TweetPostCard = ({ tweet, dispatch, user }) => {
-  const likeTweetD = (uuid) => {
-    dispatch(likeTweet(uuid));
+
+  console.log(tweet)
+  var uid = tweet.uuid
+  const likeTweetD = () => {
+    dispatch(likeTweet(uid));
   };
+  
   return (
     <div className="tweetCard">
       <div className="actual-tweet">
@@ -54,10 +58,10 @@ const TweetPostCard = ({ tweet, dispatch, user }) => {
       {tweet.parent ? (
         <>
           <TweetOperation
-            liked={tweet.myparent.iliked}
+            liked={tweet.iliked}
             likeTweetD={likeTweetD}
             like_count={tweet.myparent.like_count}
-            tweet={tweet.myparent}
+            tweet={tweet}
             bookmark={tweet.myparent.i_bookmarked}
             uuid={tweet.myparent.uuid}
             oriId={tweet.uuid}
@@ -103,7 +107,7 @@ const TweetHasParentOrNot = ({ tweet }) => {
           </Link>
         </span>
 
-        <Link to={`${tweet?.username}/tweet/${tweet?.id}`}>
+        <Link to={`${tweet?.username}/tweet/${tweet?.uuid}`}>
           <div className="tweet-content">
             <span id="hover" className="d-flex">
               {/* {tweet?.username} */}
@@ -118,8 +122,13 @@ const TweetHasParentOrNot = ({ tweet }) => {
             </span>
 
             <p className="mt-2">
-              {tweet?.title} {tweet?.body}
-            </p>
+  <div className="divider">
+    {tweet?.title}
+  </div>
+  <div className="divider">
+    {tweet?.body}
+  </div>
+</p>
             {tweet?.image && (
               <img alt="img" src={tweet?.image} className="image img" />
             )}
