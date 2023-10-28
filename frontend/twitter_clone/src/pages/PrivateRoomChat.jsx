@@ -14,6 +14,11 @@ import ReconnectingWebSocket from "reconnecting-websocket";
 import AddPicker from "../components/SmallComponent/AddPicker";
 import { Link } from "react-router-dom";
 import { setMsgNoti } from "../redux/slices/NotificationSlice";
+// import { axiosInstance } from "..";
+import axios from "axios";
+
+
+
 const PrivateRoomChat = () => {
   const [msgInput, setMsgInput] = useState("");
   const [istyping, setIstyping] = useState(null);
@@ -22,7 +27,8 @@ const PrivateRoomChat = () => {
   const userIn = useSelector((state) => state.userReducer);
   const [noScroll, setNoScroll] = useState(true);
   const dispatch = useDispatch();
-  let endpoint = process.env.REACT_APP_WS_DOMAIN;
+  let endpoint = "ws://localhost:3000/";
+  let endp = "http://127.0.0.1:8000/";
   const me = userIn.user?.username;
   const chatState = useSelector((state) => state.chatReducer);
   const chats = chatState.chatMessage;
@@ -34,7 +40,14 @@ const PrivateRoomChat = () => {
   const client = new ReconnectingWebSocket(
     endpoint + "ws/chat/" + username + "/" + "?token=" + userIn.access
   );
-
+  const axiosInstance = axios.create({
+    baseURL: "http://127.0.0.1:8000/",
+    timeout: 5000,
+    headers: {
+      "Content-Type": "application/json",
+      accept: "application/json",
+    },
+  });
   useEffect(() => {
     if (localStorage.getItem("access")) {
       client.onopen = function () {
@@ -53,17 +66,17 @@ const PrivateRoomChat = () => {
           // msgDivRef.current.scrollTop = msgDivRef.current.scrollHeight;
           // console.log(data);
         }
-        if (data.command === "is_typing") {
-          setTypingUser(data.user);
-          setIstyping(data.text);
-          timer = setTimeout(() => {
-            setIstyping(null);
-          }, 500);
-        }
+        // if (data.command === "is_typing") {
+        //   setTypingUser(data.user);
+        //   setIstyping(data.text);
+        //   timer = setTimeout(() => {
+        //     setIstyping(null);
+        //   }, 500);
+        // }
       };
-      client.onclose = function () {
-        console.log("WebSocket Client disconnected");
-      };
+      // client.onclose = function () {
+      //   console.log("WebSocket Client disconnected");
+      // };
     }
   }, [dispatch]);
 
@@ -86,32 +99,76 @@ const PrivateRoomChat = () => {
     dispatch(getChatMessage(username));
   }, [dispatch, username]);
 
-  const sendChat = (e) => {
+  // export const reTweet = (tweetId) => async (dispatch) => {
+  //   try {
+  //     const res = await axiosInstance.post(`tweets/post/retweet/`, {
+  //       tweetId: tweetId,
+  //     });
+  
+  //     dispatch(tweetAdded(res.data));
+  //     dispatch(setMessage(`Re Tweeted !`));
+  //   } catch (err) {
+  //     dispatch(tweetFail());
+  //     console.log(err.response.data);
+  //     dispatch(setMessage(err.response.data.detail));
+  //   }
+  // };
+  const sendChat = async (e) => {
     e.preventDefault();
     if (!msgInput) {
       alert("cannot be blank !");
     } else {
-      client.send(
-        JSON.stringify({
-          command: "private_chat",
-          message: msgInput,
-          username: me,
-        })
-      );
+        const res = await axiosInstance.post(`chats/send_msg/`, {
+    
+            "id": 1,
+            "sender":me,
+            "text": msgInput
+
+      });
+      // client.send(
+      //   JSON.stringify({
+      //     command: "private_chat",
+      //     message: msgInput,
+      //     username: me,
+      //   })
+      // );
     }
     setMsgInput("");
   };
-  let timer;
-  const isTyping = (e) => {
-    window.clearTimeout(timer);
-    client.send(
-      JSON.stringify({
-        command: "is_typing",
-        text: `${me} is typing ...`,
-        user: me,
-      })
-    );
+  const getChat = async (e) => {
+
+        const res = await axiosInstance.get(`chats/send_msg/`);
+        const data = res.data;
+        if (data && data.length > 0) {
+          const conversation = data[0]; // Assuming you have only one conversation in the array
+        
+          // Iterate through the messages in the conversation
+          for (const message of conversation.messages) {
+            const sender = message.sender;
+            const username = sender.username;
+            const text = message.text;
+            const profilePic = sender.profile_pic;
+        
+            // Now you can use the username, text, and profilePic as needed
+            console.log(`Username: ${username}`);
+            console.log(`Text: ${text}`);
+            console.log(`Profile Picture: ${profilePic}`);
+          }
+        }
+
+
   };
+  let timer;
+  // const isTyping = (e) => {
+  //   window.clearTimeout(timer);
+  //   client.send(
+  //     JSON.stringify({
+  //       command: "is_typing",
+  //       text: `${me} is typing ...`,
+  //       user: me,
+  //     })
+  //   );
+  // };
 
   function loadMore() {
     if (meta?.next) {
@@ -138,8 +195,45 @@ const PrivateRoomChat = () => {
               <BiUpArrowCircle />
             </i>
           )}
-          {/* <ScrollableFeed> */}
+
+<div ref={msgDivRef} id="msg-scoll" className="msg-div">
+          {meta?.next && (
+            <i onClick={loadMore} className="largeicon center" title="load more">
+              <BiUpArrowCircle />
+            </i>
+          )}
           {chats &&
+            chats
+              .slice()
+              .reverse() // reversing array
+              .map((msg) => (
+                <div
+                  key={msg.id}
+                  className={
+                    msg?.sender?.username === me ? "rightby" : "msg-chat"
+                  }
+                >
+                  {msg?.sender?.username !== me && (
+                    <Link to={`/${msg?.sender.username}`}>
+                      <img
+                        src={msg?.sender.profile_pic}
+                        alt="profile"
+                        className="authorImage"
+                      />
+                    </Link>
+                  )}
+                  <div
+                    className={
+                      msg.sender?.username === me ? "msg-txt right" : "msg-txt"
+                    }
+                  >
+                    {msg.text}
+                  </div>
+                </div>
+              ))}
+        </div>
+Hello
+          {/* {chats &&
             chats
               .slice()
               .reverse() //revrsing array
@@ -170,8 +264,7 @@ const PrivateRoomChat = () => {
                     {msg.text}
                   </div>
                 </div>
-              ))}
-          {/* </ScrollableFeed> */}
+              ))} */}
         </div>
 
         <div className="bottom-input">
@@ -189,7 +282,7 @@ const PrivateRoomChat = () => {
             onChange={(e) => setMsgInput(e.target.value)}
             placeholder="Start a new message"
             onKeyDown={EnterKey}
-            onKeyPress={isTyping}
+            // onKeyPress={isTyping}
             className="chat-input"
           />
 
@@ -199,7 +292,7 @@ const PrivateRoomChat = () => {
               position="up"
               setInput={setMsgInput}
             />
-            <BiSend onClick={sendChat} className="largeicon mx-2" />
+            <BiSend onClick={getChat} className="largeicon mx-2" />
           </span>
         </div>
       </div>
