@@ -23,6 +23,7 @@ const PrivateRoomChat = () => {
   const [msgInput, setMsgInput] = useState("");
   const [istyping, setIstyping] = useState(null);
   const [typingUser, setTypingUser] = useState(null);
+  const [chatData, setChatData] = useState([]); 
   const { username } = useParams();
   const userIn = useSelector((state) => state.userReducer);
   const [noScroll, setNoScroll] = useState(true);
@@ -63,20 +64,11 @@ const PrivateRoomChat = () => {
           if (audioRef.current) {
             audioRef.current.play();
           }
-          // msgDivRef.current.scrollTop = msgDivRef.current.scrollHeight;
-          // console.log(data);
+
         }
-        // if (data.command === "is_typing") {
-        //   setTypingUser(data.user);
-        //   setIstyping(data.text);
-        //   timer = setTimeout(() => {
-        //     setIstyping(null);
-        //   }, 500);
-        // }
+
       };
-      // client.onclose = function () {
-      //   console.log("WebSocket Client disconnected");
-      // };
+
     }
   }, [dispatch]);
 
@@ -99,20 +91,6 @@ const PrivateRoomChat = () => {
     dispatch(getChatMessage(username));
   }, [dispatch, username]);
 
-  // export const reTweet = (tweetId) => async (dispatch) => {
-  //   try {
-  //     const res = await axiosInstance.post(`tweets/post/retweet/`, {
-  //       tweetId: tweetId,
-  //     });
-  
-  //     dispatch(tweetAdded(res.data));
-  //     dispatch(setMessage(`Re Tweeted !`));
-  //   } catch (err) {
-  //     dispatch(tweetFail());
-  //     console.log(err.response.data);
-  //     dispatch(setMessage(err.response.data.detail));
-  //   }
-  // };
   const sendChat = async (e) => {
     e.preventDefault();
     if (!msgInput) {
@@ -125,50 +103,43 @@ const PrivateRoomChat = () => {
             "text": msgInput
 
       });
-      // client.send(
-      //   JSON.stringify({
-      //     command: "private_chat",
-      //     message: msgInput,
-      //     username: me,
-      //   })
-      // );
+
     }
     setMsgInput("");
+    window.location.reload();
   };
+// let chatData =[];
+let convo;
   const getChat = async (e) => {
 
         const res = await axiosInstance.get(`chats/send_msg/`);
         const data = res.data;
+
         if (data && data.length > 0) {
-          const conversation = data[0]; // Assuming you have only one conversation in the array
-        
+          const conversation = data[0];
+          const convo =data[0]; // Assuming you have only one conversation in the array
+          // chatData=conversation;
           // Iterate through the messages in the conversation
-          for (const message of conversation.messages) {
-            const sender = message.sender;
-            const username = sender.username;
-            const text = message.text;
-            const profilePic = sender.profile_pic;
-        
-            // Now you can use the username, text, and profilePic as needed
-            console.log(`Username: ${username}`);
-            console.log(`Text: ${text}`);
-            console.log(`Profile Picture: ${profilePic}`);
-          }
+          setChatData(conversation.messages);
+          
+          // for (const message of conversation.messages) {
+            
+          //   const sender = message.sender;
+          //   const username = sender.username;
+          //   const text = message.text;
+          //   const profilePic = sender.profile_pic;
+
+          // }
         }
+       
 
 
   };
-  let timer;
-  // const isTyping = (e) => {
-  //   window.clearTimeout(timer);
-  //   client.send(
-  //     JSON.stringify({
-  //       command: "is_typing",
-  //       text: `${me} is typing ...`,
-  //       user: me,
-  //     })
-  //   );
-  // };
+  useEffect(() => {
+    getChat();
+    
+  }, []);
+
 
   function loadMore() {
     if (meta?.next) {
@@ -176,15 +147,19 @@ const PrivateRoomChat = () => {
       dispatch(loadMoreMessage(meta.next));
     }
   }
-  // if (meta?.next && msgDivRef.current && msgDivRef.current.scrollTop < 40) {
-  //   loadMore();
-  // }
+
+
+  console.log(chatData)
+
+         
+  const chatMessages = chatData.chatMessages || [];
+  console.log(chatMessages + 'ssss')
   return (
     <Message>
       <TweetHeader headerName={username} />
 
       <div className="main-div">
-        <audio ref={audioRef} src={Pop}></audio>
+       
         <div ref={msgDivRef} id="msg-scoll" className="msg-div">
           {meta?.next && (
             <i
@@ -195,59 +170,24 @@ const PrivateRoomChat = () => {
               <BiUpArrowCircle />
             </i>
           )}
+          
+        <div>
+          {console.log()}
+        {chatData.map(chatMessage => (
 
-<div ref={msgDivRef} id="msg-scoll" className="msg-div">
-          {meta?.next && (
-            <i onClick={loadMore} className="largeicon center" title="load more">
-              <BiUpArrowCircle />
-            </i>
-          )}
-          {chats &&
-            chats
-              .slice()
-              .reverse() // reversing array
-              .map((msg) => (
-                <div
-                  key={msg.id}
+          <div key={chatMessage.id}>
+
+ <div
+                  key={chatMessage.id}
                   className={
-                    msg?.sender?.username === me ? "rightby" : "msg-chat"
+                    chatMessage?.sender?.username === me ? "msg-chat" : "rightby"
                   }
                 >
-                  {msg?.sender?.username !== me && (
-                    <Link to={`/${msg?.sender.username}`}>
+                
+                  {chatMessage?.sender?.username === username && (
+                    <Link to={`/${chatMessage?.sender.username}`}>
                       <img
-                        src={msg?.sender.profile_pic}
-                        alt="profile"
-                        className="authorImage"
-                      />
-                    </Link>
-                  )}
-                  <div
-                    className={
-                      msg.sender?.username === me ? "msg-txt right" : "msg-txt"
-                    }
-                  >
-                    {msg.text}
-                  </div>
-                </div>
-              ))}
-        </div>
-Hello
-          {/* {chats &&
-            chats
-              .slice()
-              .reverse() //revrsing array
-              .map((msg) => (
-                <div
-                  key={msg.id}
-                  className={
-                    msg?.sender?.username === username ? "msg-chat" : "rightby"
-                  }
-                >
-                  {msg?.sender?.username === username && (
-                    <Link to={`/${msg?.sender.username}`}>
-                      <img
-                        src={msg?.sender.profile_pic}
+                        src={"http://127.0.0.1:8000/"+chatMessage?.sender.profile_pic}
                         alt="profile"
                         className="authorImage"
                       />
@@ -256,15 +196,20 @@ Hello
 
                   <div
                     className={
-                      msg.sender?.username === username
+                      chatMessage.sender?.username === username
                         ? "msg-txt"
                         : "msg-txt right"
                     }
                   >
-                    {msg.text}
+                    {chatMessage.text}
                   </div>
                 </div>
-              ))} */}
+
+          </div>
+        ))}
+      </div>
+
+             
         </div>
 
         <div className="bottom-input">
@@ -292,7 +237,7 @@ Hello
               position="up"
               setInput={setMsgInput}
             />
-            <BiSend onClick={getChat} className="largeicon mx-2" />
+            <BiSend onClick={sendChat} className="largeicon mx-2" />
           </span>
         </div>
       </div>

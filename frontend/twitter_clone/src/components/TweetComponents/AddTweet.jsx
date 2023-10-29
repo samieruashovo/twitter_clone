@@ -28,6 +28,7 @@ const AddTweet = () => {
   const { username } = useParams();
   const dispatch = useDispatch();
   const inputOpenFileRef = useRef(null);
+  const [profilePicture, setProfilePicture] = useState(null);
   const { user, isAuthenticated } = userIn;
 
   useEffect(() => {
@@ -80,23 +81,32 @@ const AddTweet = () => {
     const jsonData = localStorage.getItem("userData");
     const dataObject = JSON.parse(jsonData);
     console.log("profile pic"+dataObject.data.profile_pic)
-    return dataObject.data.profile_pic;
+    setProfilePicture(dataObject.data.profile_pic)
+
   }
+  useEffect(() => {
+    profilePic()
+  }, []);
+
   return (
     <div className="add-tweet">
       <>
         <span className="add-tweet-image">
           <Link to={(user && `${user.username}`) || "/"}>
-            <img
-              alt="img"
-              src={
-                "https://dp.profilepics.in/profile-pictures-for-facebook-whatsapp/profile-pics/profile-pics-744.jpg"
-              }
-              // src={(profilePic) || loadingGif}
-              className="rounded-circle author-image"
+          {profilePicture ? ( // Check if profilePicture has a value
+        <img 
+        className="rounded-circle author-image "
               width="60px"
               height="60px"
-            />
+        src={profilePicture} alt="Profile" />
+      ) : (
+        <img className="rounded-circle author-image "
+        width="60px"
+        height="60px"
+          src="https://dp.profilepics.in/profile-pictures-for-facebook-whatsapp/profile-pics/profile-pics-744.jpg"
+          alt="Default Profile"
+        />
+      )}
           </Link>
         </span>
         <div className="add-tweet-input">

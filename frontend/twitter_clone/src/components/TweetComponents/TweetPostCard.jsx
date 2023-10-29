@@ -7,8 +7,15 @@ import Moment from "moment";
 import { likeTweet } from "../../redux/asyncActions/TweetAsync";
 import { BiGlobe } from "react-icons/bi";
 import { FaLock } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { axiosInstance } from "../..";
+
+
 
 const TweetPostCard = ({ tweet, dispatch, user }) => {
+ 
+
 
   console.log(tweet)
   var uid = tweet.uuid
@@ -58,6 +65,7 @@ const TweetPostCard = ({ tweet, dispatch, user }) => {
       {tweet.parent ? (
         <>
           <TweetOperation
+            username = {tweet.username}
             liked={tweet.iliked}
             likeTweetD={likeTweetD}
             like_count={tweet.myparent.like_count}
@@ -71,6 +79,7 @@ const TweetPostCard = ({ tweet, dispatch, user }) => {
       ) : (
         <>
           <TweetOperation
+          username = {tweet.username}
             liked={tweet.iliked}
             likeTweetD={likeTweetD}
             like_count={tweet.like_count}
@@ -88,22 +97,50 @@ const TweetPostCard = ({ tweet, dispatch, user }) => {
 export default TweetPostCard;
 
 const TweetHasParentOrNot = ({ tweet }) => {
+  const [profilePicture, setProfilePicture] = useState(false);
+
+  const getUserInfo = async (username) => {
+    console.log("asee");
+    
+    try {
+      console.log("kssksk");
+      const res = await axiosInstance.get(`http://localhost:8000/user/${username}/`);
+      setProfilePicture(res.data.profile_pic)
+      console.log(profilePicture+ "alllll")
+     
+  
+  
+    } catch (err) {
+
+      // console.log(err);
+    }
+  };
+  useEffect(() => {
+    console.log("laksdja")
+    getUserInfo(tweet?.username);
+    console.log("laksdjadone")
+  }, [tweet?.username]);
   const url = "http://localhost:8000/";
   return (
     <>
       <span className="d-flex">
         <span className="add-tweet-image ">
           <Link to={`/${tweet?.username}`}>
-            <img
-              alt="img"
-              // src={tweet?.author.avatar}
-              src={
-                "https://dp.profilepics.in/profile-pictures-for-facebook-whatsapp/profile-pics/profile-pics-744.jpg"
-              }
-              className="rounded-circle author-image "
+
+          {profilePicture ? ( // Check if profilePicture has a value
+        <img 
+        className="rounded-circle author-image "
               width="60px"
               height="60px"
-            />
+        src={profilePicture} alt="Profile" />
+      ) : (
+        <img className="rounded-circle author-image "
+        width="60px"
+        height="60px"
+          src="https://dp.profilepics.in/profile-pictures-for-facebook-whatsapp/profile-pics/profile-pics-744.jpg"
+          alt="Default Profile"
+        />
+      )}
           </Link>
         </span>
 

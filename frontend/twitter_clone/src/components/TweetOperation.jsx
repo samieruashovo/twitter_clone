@@ -13,9 +13,13 @@ import {
 import { addComment } from "../redux/asyncActions/CommentAsync";
 import AddPicker from "./SmallComponent/AddPicker";
 import { colors } from "@material-ui/core";
+import axios from "axios";
+
+
+
 
 export const TweetOperation = ({
-  // bookmark,
+  username,
   liked,
   id,
   oriId = null,
@@ -35,15 +39,19 @@ export const TweetOperation = ({
   const userIn = useSelector((state) => state.userReducer);
   const isAuthenticated = userIn.isAuthenticated;
 
-  useEffect(() => {
-    setClick(liked);
-    // setBookmarked(bookmark);
-  }, [liked, /*bookmark8*/]);
 
-  // const onBookmark = (id) => {
-  //   dispatch(bookmarkTweet(id));
-  //   setBookmarked(!bookmarked);
-  // };
+ 
+ 
+
+  useEffect(() => {
+    
+    setClick(liked);
+
+    // setBookmarked(bookmark);
+  }, [liked,]);
+
+
+  
   const setId = (ia) => {
     setComId(ia);
   };

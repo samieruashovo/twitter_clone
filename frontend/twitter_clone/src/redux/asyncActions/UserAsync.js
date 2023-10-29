@@ -25,8 +25,8 @@ export const load_user = () => async (dispatch) => {
   if (localStorage.getItem("access")) {
     try {
       const res = await axiosInstance.get(`${url}auth/users/me/`);
-      console.log("load_user" + res.data.username);
-      console.log(localStorage.getItem("userData"));
+      // console.log("load_user" + res.data.username);
+      // console.log(localStorage.getItem("userData"));
       // console.log("load_user2"+res.data.)
       // while (res.data.username !== undefined) {
       //   console.log("running while loop")
