@@ -1,5 +1,6 @@
 from rest_framework import exceptions
 from rest_framework.decorators import api_view
+from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from .models import User
@@ -83,18 +84,20 @@ def follow_user_list(request):
     return paginator.get_paginated_response(serializer.data)
 
 
-@api_view(['PUT'])
-def update_profile(request):
-    user = request.user
-    new_gender = request.data.get('gender', user.gender)
-    new_bio = request.data.get('bio', user.bio)
-    new_firstname = request.data.get('firstname', user.firstname)
-    new_lastname = request.data.get('lastname', user.lastname)
+# @api_view(['PUT'])
+# def update_profile(request):
+#     print(request.user)
+#     print("here 11")
+#     user = request.user
+#     new_gender = request.data.get('gender', 'female')
+#     new_bio = request.data.get('bio', user.bio)
+#     new_firstname = request.data.get('firstname', user.first_name)
+#     new_lastname = request.data.get('lastname', user.last_name)
 
-    user.gender = new_gender
-    user.bio = new_bio
-    user.firstname = new_firstname
-    user.lastname = new_lastname
-    user.save()
+#     user.gender = new_gender
+#     user.bio = new_bio
+#     user.firstname = new_firstname
+#     user.lastname = new_lastname
+#     user.save()
 
-    return Response({'message': 'Profile information updated successfully'}, status=Response({"ok"}))
+#     return Response({'message': 'Profile information updated successfully'}, status=Response({"ok"}))

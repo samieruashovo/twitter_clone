@@ -3,6 +3,7 @@ from .models import Comment, Post
 from rest_framework.response import Response
 from django import forms
 
+
 class PostCommentSerializer(serializers.ModelSerializer):
     # author = UserSerializer(read_only=True, many=False)
     # iliked = serializers.SerializerMethodField(read_only=True)
@@ -10,16 +11,16 @@ class PostCommentSerializer(serializers.ModelSerializer):
     # children = serializers.SerializerMethodField(read_only=True)
     # parentId= serializers.SerializerMethodField(read_only=True)
     # like_count = serializers.SerializerMethodField(read_only=True)
-    
-
 
     class Meta:
         model = Comment
         fields = [
-            'id','body',
-            
+            'id', 'body',
+
             'created',
-            ]
+        ]
+
+
 class UserPostSerializer(serializers.ModelSerializer):
     like_count = serializers.SerializerMethodField(read_only=True)
     username = serializers.SerializerMethodField(read_only=True)
@@ -53,20 +54,24 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_like_count(self, obj):
         return 0
-        #return obj.liked.count()
+        # return obj.liked.count()
 
     def get_username(self, obj):
-        return "obj.username"
+        return obj.username
 
     def get_myparent(self, obj):
-        serializers = PostSerializer(context={"request": self.context.get("request")}, many=True)
+        serializers = PostSerializer(
+            context={"request": self.context.get("request")}, many=True)
         return serializers.data
+
     def get_gender(self, obj):
-        return "obj.gender1"
-    
+        return obj.gender
+
     def get_iliked(self, obj):
         return (
-            True if self.context.get("request").username in obj.liked.all() else False
+            True if self.context.get(
+                "request").username in obj.liked.all() else False
         )
+
     def get_comment_count(self, obj):
         return "S"

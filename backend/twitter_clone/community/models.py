@@ -21,7 +21,7 @@ class Post(models.Model):
     image = models.ImageField(blank=True, null=True,
                               upload_to='tweetspic')  # image of the post
     gender = models.CharField(max_length=200, blank=True)
-    iliked = models.BooleanField(default=False)
+    # iliked = models.BooleanField(default=False)
     uuid = models.UUIDField(default=uuid.uuid4, unique=True)
     # created_at = models.DateTimeField(auto_now_add=True)
 

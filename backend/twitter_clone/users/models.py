@@ -43,7 +43,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=200, blank=True, null=True)
     last_name = models.CharField(max_length=200, blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
-    gender = models.CharField(max_length=200, blank=True, default='male')
+    gender = models.CharField(max_length=200, blank=True,  null=True)
     email = models.CharField(max_length=200, unique=True)
     password = models.CharField(max_length=200)
     followers = models.ManyToManyField(

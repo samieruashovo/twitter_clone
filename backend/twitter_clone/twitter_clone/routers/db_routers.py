@@ -82,7 +82,7 @@ class TweetRouter:
         "contenttypes",
         "admin",
         "sessions",
-        "users",
+        # "users",
         "chat",
         "media",
         "avatars",
@@ -123,18 +123,20 @@ class TweetRouter:
             if message_instance:
                 print("message_instance "+message_instance.user1.username)
                 return "male_user_db"
-        else:
+        elif model._meta.app_label == "community":
             post_instance = hints.get("instance")
             if post_instance and hasattr(post_instance, "gender"):
-            # print("ssas4")
-               if post_instance.gender == "male":
-                   # print('ssas5')
-                   # print("genderss: ")
-                   return "male_user_db"  # Write to male_user_db
-               else:
-                   # print('ssas6')
-                   # print("gender: ")
-                   return "female_user_db"
+                # print("ssas4")
+                if post_instance.gender == "male":
+                    # print('ssas5')
+                    # print("genderss: ")
+                    return "male_user_db"  # Write to male_user_db
+                else:
+                    # print('ssas6')
+                    # print("gender: ")
+                    return "female_user_db"
+        else:
+            return 'male_user_db'
 
     def allow_relation(self, obj1, obj2, **hints):
         # Allow relations if both objects belong to the "tweets" app
