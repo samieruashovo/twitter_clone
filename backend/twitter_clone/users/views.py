@@ -48,7 +48,7 @@ def follow_unfollow(request):
         return Response({'follow': False,
                          'followers': obj.followed.count(),
                          'username': username,
-                         'state':'Follow'
+                         'state': 'Follow'
                          })
     else:
         myprofile.following.add(obj)
@@ -58,24 +58,43 @@ def follow_unfollow(request):
             from_user=request.user
         )
         return Response({'follow': True,
-         'followers': obj.followed.count(),
-         'state':'UnFollow'}
-         )
+                         'followers': obj.followed.count(),
+                         'state': 'UnFollow'}
+                        )
+
 
 @api_view(['GET'])
 def recommend_user(request):
     users = User.objects.exclude(username=request.user.username)
-    users = users.exclude(id__in = request.user.following.all())[:5]
-    serializer = UserSerializer(users,many=True,context={'request':request})
+    users = users.exclude(id__in=request.user.following.all())[:5]
+    serializer = UserSerializer(users, many=True, context={'request': request})
     return Response(serializer.data)
 
 
 @api_view(['GET'])
 def follow_user_list(request):
     users = User.objects.exclude(username=request.user.username)
-    users = users.exclude(id__in = request.user.following.all())
+    users = users.exclude(id__in=request.user.following.all())
 
     paginator = CustomPagination()
-    result_page = paginator.paginate_queryset(users,request)
-    serializer = UserSerializer(result_page,many=True,context={'request':request})
+    result_page = paginator.paginate_queryset(users, request)
+    serializer = UserSerializer(
+        result_page, many=True, context={'request': request})
     return paginator.get_paginated_response(serializer.data)
+
+
+@api_view(['PUT'])
+def update_profile(request):
+    user = request.user
+    new_gender = request.data.get('gender', user.gender)
+    new_bio = request.data.get('bio', user.bio)
+    new_firstname = request.data.get('firstname', user.firstname)
+    new_lastname = request.data.get('lastname', user.lastname)
+
+    user.gender = new_gender
+    user.bio = new_bio
+    user.firstname = new_firstname
+    user.lastname = new_lastname
+    user.save()
+
+    return Response({'message': 'Profile information updated successfully'}, status=Response({"ok"}))

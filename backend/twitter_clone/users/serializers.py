@@ -88,7 +88,7 @@ class UserEditSerializer(serializers.ModelSerializer):
             "profile_pic",
             "bio",
             "cover_pic",
-            "email",  #'i_follow'
+            "email",  # 'i_follow'
             "username",
             "followers",
             "following",
