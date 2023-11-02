@@ -119,10 +119,10 @@ class TweetRouter:
                     # print("gender: ")
                     return "female_user_db"
         elif model._meta.app_label == "chat":
-            message_instance = hints.get("instance")
-            if message_instance:
-                print("message_instance "+message_instance.user1.username)
-                return "male_user_db"
+            # message_instance = hints.get("instance")
+            # if message_instance:
+            #     print("message_instance "+message_instance.user1.username)
+            return "male_user_db"
         elif model._meta.app_label == "community":
             post_instance = hints.get("instance")
             if post_instance and hasattr(post_instance, "gender"):

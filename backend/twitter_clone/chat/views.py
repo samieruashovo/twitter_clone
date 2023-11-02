@@ -31,8 +31,9 @@ def return_chat_messages(request, username):
 
 
 @api_view(['GET', 'POST'])
-def get_rooms(request):
-    u1 = User.objects.get(username='shovo456')
+def get_rooms(request, user1):
+    u1 = User.objects.get(username=user1)
+    # u2 = User.objects.get(username=user2)
     # u1 = request.user
     print('u1 is ', u1)
     print('request.data is ', request.method)
@@ -44,6 +45,9 @@ def get_rooms(request):
               to_user=u1,
               )
         ).delete()
+        # target_room = rooms.filter(Q(user1=u1, user2=u2)).first()
+        # print(target_room)
+        print("rooms")
     print("above post")
 #     {
 # "other_user":"shovo123",
@@ -66,10 +70,12 @@ def get_rooms(request):
 
 
 @api_view(['GET', 'POST'])
-def chat_view(request):
+def chat_view(request, user1, user2):
+    u1 = User.objects.get(username=user1)
+    u2 = User.objects.get(username=user2)
     if request.method == "GET":
         # Handle GET request for retrieving messages and chat rooms
-        u1 = User.objects.using('male_user_db').get(username='shovo456')
+        u1 = User.objects.using('male_user_db').get(username=user1)
         rooms = PrivateChat.objects.filter(Q(user1=u1) | Q(user2=u1))
         Notification.objects.filter(
             Q(notification_type='M', to_user=u1)).delete()
@@ -103,25 +109,32 @@ def chat_view(request):
     if request.method == "POST":
         print("running xx")
         # Handle POST request for sending a message
-        u1 = User.objects.using('male_user_db').get(username='shovo456')
-        other_user = request.data.get("other_user", None)
+        u1 = User.objects.using('male_user_db').get(username='shovo123')
+        u2 = User.objects.using('male_user_db').get(username='male')
+        other_user = request.data.get("sender")
         text = request.data.get("text", None)
         print('other_user is ', other_user)
         print(u1.cover_pic)
 
         # Find or create a private chat room
-        room, created = PrivateChat.objects.get_or_create(
-            Q(user1=u1, user2__username=other_user) | Q(
-                user1__username=other_user, user2=u1)
-        )
+
+        # room, created = PrivateChat.objects.get_or_create(
+        #     Q(user1=u1, user2__username=other_user) & Q(
+        #         user1__username=other_user, user2=u1)
+        # )
+        rooms = PrivateChat.objects.filter(Q(user1=u1) | Q(user2=u1))
+        target_room = rooms.filter(
+            Q(user1=u1, user2=u2) | Q(user1=u2, user2=u1)).first()
+        print(target_room)
         print("running asdf")
 #         {
-# "other_user": "shovo123",
+# "sender": "shovo123",
 # "text": "hello2"
+
 # }
 
         # Create a new message in the room
-        message = Message(room=room, sender=u1, text=text)
+        message = Message(room=target_room, sender=u1, text=text)
         print(message)
         message.save(using='male_user_db')
 

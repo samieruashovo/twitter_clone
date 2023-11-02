@@ -37,7 +37,7 @@ class UserPostSerializer(serializers.ModelSerializer):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ["title", "username", "body", "liked", "image", "gender"]
+        fields = []
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -45,12 +45,15 @@ class PostSerializer(serializers.ModelSerializer):
     like_count = serializers.SerializerMethodField(read_only=True)
     # iliked = serializers.SerializerMethodField(read_only=True)
     comment_count = serializers.SerializerMethodField(read_only=True)
-    gender = serializers.SerializerMethodField(read_only=True)
+    # gender = serializers.SerializerMethodField(max_length=200, allow_blank=True)
     myparent = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Post
-        fields = "__all__"
+        fields = ('uuid', 'title', 'username', 'body', 'liked', 'image',
+                  'gender', 'like_count', 'comment_count', 'myparent')
+        read_only_fields = ('uuid', 'like_count', 'comment_count', 'myparent')
+        # exclude = ('uuid',)
 
     def get_like_count(self, obj):
         return 0
